@@ -289,12 +289,19 @@ const seedData = async () => {
     const seededCoupons = await Coupon.insertMany(couponsData);
     console.log(`Seeded ${seededCoupons.length} Discount Coupons.`);
 
+    console.log('Seeded ${seededCoupons.length} Discount Coupons.');
+
     console.log('Seeding completed successfully!');
-    process.exit(0);
+    if (require.main === module) process.exit(0);
   } catch (error) {
-    console.error('Seeding failed:', error);
-    process.exit(1);
+    console.error('Error with data import:', error);
+    if (require.main === module) process.exit(1);
+    throw error;
   }
 };
 
-seedData();
+if (require.main === module) {
+  seedData();
+}
+
+module.exports = seedData;

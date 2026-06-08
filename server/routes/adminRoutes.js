@@ -17,6 +17,7 @@ const {
 const { createBlog } = require('../controllers/blogController');
 const { protect } = require('../middleware/authMiddleware');
 const admin = require('../middleware/adminMiddleware');
+const seedData = require('../seed');
 const router = express.Router();
 
 const uploadDir = path.join(__dirname, '../uploads/admin');
@@ -42,6 +43,16 @@ const upload = multer({
       return;
     }
     cb(new Error('Only image files are allowed'));
+  }
+});
+
+// Temporary cloud seeding route
+router.get('/seed-trigger', async (req, res) => {
+  try {
+    await seedData();
+    res.json({ message: 'Cloud database seeded successfully!' });
+  } catch (error) {
+    res.status(500).json({ error: 'Seeding failed: ' + error.message });
   }
 });
 
