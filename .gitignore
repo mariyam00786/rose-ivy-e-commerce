@@ -1,0 +1,9 @@
+node_modules/
+.env
+.DS_Store
+dist/
+build/
+server/mongodb_data/
+server/uploads/
+npm-debug.log
+yarn-error.log
