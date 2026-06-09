@@ -89,8 +89,8 @@ export default function Navbar() {
   return (
     <>
       {/* Announcement Bar */}
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1001, background: '#f9f5f3', color: '#1a1a1a', textAlign: 'center', padding: '9px 20px', fontFamily: 'Inter', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-        Free delivery on orders over AED 350 &nbsp;·&nbsp; Bio-preserved flowers lasting 1+ year
+      <div className="fixed top-0 left-0 right-0 z-[1001] bg-[#f9f5f3] text-[#1a1a1a] text-center px-4 py-2 font-inter text-[9px] sm:text-[11px] tracking-[0.1em] sm:tracking-[0.18em] uppercase border-b border-black/5 whitespace-nowrap overflow-hidden text-ellipsis">
+        Free delivery on orders over AED 350 <span className="hidden sm:inline">&nbsp;·&nbsp; Bio-preserved flowers lasting 1+ year</span>
       </div>
 
       {/* Main Navbar */}
@@ -111,8 +111,8 @@ export default function Navbar() {
           <div className="container-site" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
             
             {/* Left: Currency + Search */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 24, flex: 1 }}>
-              <span style={{ fontFamily: 'Inter', fontSize: 12, color: navIconColor, letterSpacing: '0.1em', cursor: 'pointer' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: 1 }}>
+              <span className="hidden sm:inline" style={{ fontFamily: 'Inter', fontSize: 12, color: navIconColor, letterSpacing: '0.1em', cursor: 'pointer' }}>
                 AED, د.إ
               </span>
               <button
@@ -126,15 +126,7 @@ export default function Navbar() {
 
             {/* Center: Logo */}
             <Link to="/" style={{ flex: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>
-              <span style={{
-                fontFamily: 'Raleway, sans-serif',
-                fontWeight: 300,
-                fontSize: 22,
-                letterSpacing: '0.38em',
-                color: navTextColor,
-                textTransform: 'uppercase',
-                whiteSpace: 'nowrap',
-              }}>
+              <span className="font-raleway font-light text-[18px] md:text-[22px] tracking-[0.2em] md:tracking-[0.38em] uppercase whitespace-nowrap" style={{ color: navTextColor }}>
                 ROSE & IVY
               </span>
             </Link>
@@ -175,14 +167,14 @@ export default function Navbar() {
                   {cartCount > 0 && (
                     <span style={{
                       position: 'absolute', top: -6, right: -6,
-                      background: '#D1AFA1', color: navTextColor,
+                      background: '#D1AFA1', color: '#fff',
                       borderRadius: '50%', width: 16, height: 16,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: 9, fontWeight: 600, fontFamily: 'Inter',
                     }}>{cartCount}</span>
                   )}
                 </div>
-                <span className="hidden md:inline" style={{ fontSize: 12, fontFamily: 'Inter', letterSpacing: '0.05em' }}>
+                <span className="hidden lg:inline" style={{ fontSize: 12, fontFamily: 'Inter', letterSpacing: '0.05em' }}>
                   {cartCount} {cartCount === 1 ? 'item' : 'items'}
                 </span>
               </Link>
