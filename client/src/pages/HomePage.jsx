@@ -245,7 +245,7 @@ export default function HomePage() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(26,26,26,0.6) 0%, rgba(26,26,26,0.2) 70%, rgba(26,26,26,0.05) 100%)' }} />
 
         {/* Hero Content */}
-        <div ref={heroRef} style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%', padding: '0 60px', maxWidth: 750 }}>
+        <div ref={heroRef} style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', height: '100%', padding: '0 20px', maxWidth: 800, margin: '0 auto' }}>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
             animate={heroVisible ? { opacity: 1, y: 0 } : {}}
@@ -259,7 +259,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={heroVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.4 }}
-            style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 'clamp(16px, 2.5vw, 22px)', color: 'rgba(255,255,255,0.85)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 20 }}
+            style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 'clamp(16px, 2.5vw, 22px)', color: 'rgba(255,255,255,0.9)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 24 }}
           >
             Eternal Flowers Boutique <strong style={{ fontWeight: 500 }}>Dubai</strong>
           </motion.h2>
@@ -268,7 +268,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={heroVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.55 }}
-            style={{ fontFamily: 'Inter', fontWeight: 300, fontSize: 15, color: 'rgba(255,255,255,0.75)', lineHeight: 1.8, maxWidth: 520, marginBottom: 40 }}
+            style={{ fontFamily: 'Inter', fontWeight: 300, fontSize: 15, color: 'rgba(255,255,255,0.85)', lineHeight: 1.8, maxWidth: 600, marginBottom: 40 }}
           >
             IN BLOOM is the floral atelier in Dubai dedicated exclusively to bio-preserved flower arrangements that last over a year without water or any maintenance. Blending sustainability with luxury, we craft timeless floral designs that elevate interiors.
           </motion.p>
@@ -277,10 +277,10 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={heroVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, delay: 0.7 }}
-            style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}
+            style={{ display: 'flex', gap: 16, flexWrap: 'wrap', justifyContent: 'center' }}
           >
-            <Link to="/products" className="btn-primary">To Shop</Link>
-            <Link to="/about" className="btn-outlined">What Are Preserved Flowers?</Link>
+            <Link to="/products" className="btn-primary" style={{ background: '#fff', color: '#1a1a1a', padding: '14px 32px', border: 'none', letterSpacing: '0.1em' }}>To Shop</Link>
+            <Link to="/about" className="btn-outlined" style={{ borderColor: 'rgba(255,255,255,0.6)', color: '#fff', padding: '14px 32px', letterSpacing: '0.1em' }}>What Are Preserved Flowers?</Link>
           </motion.div>
         </div>
 
