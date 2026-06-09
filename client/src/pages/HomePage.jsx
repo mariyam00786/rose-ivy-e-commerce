@@ -330,7 +330,7 @@ export default function HomePage() {
       ═══════════════════════════════════════ */}
       <section ref={featRef} style={{ background: '#f9f5f3', padding: '48px 0' }}>
         <div className="container-site">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-0">
             {FEATURES.map((f, i) => {
               const Icon = f.icon;
               return (
@@ -339,11 +339,7 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={featVisible ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: i * 0.1, duration: 0.6 }}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 18,
-                    padding: '0 32px',
-                    borderRight: i < FEATURES.length - 1 ? '1px solid rgba(0,0,0,0.06)' : 'none',
-                  }}
+                  className="flex items-center gap-4 px-4 md:px-8 border-b md:border-b-0 md:border-r border-black/5 last:border-b-0 last:border-r-0 pb-6 md:pb-0"
                 >
                   <Icon size={24} style={{ color: '#D1AFA1', flexShrink: 0 }} />
                   <div>
@@ -383,14 +379,14 @@ export default function HomePage() {
           </div>
 
           {loading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24 }}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
               {[...Array(8)].map((_, i) => (
                 <div key={i} style={{ background: '#f9f5f3', aspectRatio: '3/4', borderRadius: 2 }} />
               ))}
             </div>
           ) : (
             <motion.div
-              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 24 }}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
               initial={{ opacity: 0 }}
               animate={prodVisible ? { opacity: 1 } : {}}
               transition={{ duration: 0.6 }}
@@ -438,7 +434,7 @@ export default function HomePage() {
       ═══════════════════════════════════════ */}
       <section ref={whyRef} style={{ padding: '80px 0', background: '#f9f5f3' }}>
         <div className="container-site">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               animate={whyVisible ? { opacity: 1, x: 0 } : {}}
