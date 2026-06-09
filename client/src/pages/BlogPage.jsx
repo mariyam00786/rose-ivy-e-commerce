@@ -20,7 +20,7 @@ export default function BlogPage() {
 
       <section style={{ padding: '80px 0' }}>
         <div className="container-site">
-          {posts.length > 0 && (
+          {POSTS.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-0 mb-12 bg-[#f9f5f3]">
             <div style={{ position: 'relative', aspectRatio: '4/3' }}>
               <img src={featured.img} alt={featured.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -37,9 +37,9 @@ export default function BlogPage() {
           </motion.div>
           )}
 
-          {posts.length > 1 && (
+          {POSTS.length > 1 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {posts.slice(1).map((post, i) => (
+            {POSTS.slice(1).map((post, i) => (
               <motion.div key={post.slug} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <Link to={`/blog/${post.slug}`} style={{ display: 'block', textDecoration: 'none' }}>
                   <div style={{ overflow: 'hidden', aspectRatio: '3/2', marginBottom: 20 }}>
@@ -56,6 +56,7 @@ export default function BlogPage() {
               </motion.div>
             ))}
           </div>
+          )}
         </div>
       </section>
     </div>
