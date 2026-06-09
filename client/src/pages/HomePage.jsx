@@ -7,6 +7,7 @@ import { useCurrency } from '../contexts/CurrencyContext';
 import { useCart } from '../contexts/CartContext';
 import { toast } from 'react-toastify';
 import { getFallbackImage, getProductImage } from '../utils/imageUtils';
+import { DEMO_PRODUCTS } from '../utils/demoData';
 
 /* ─── CATEGORY BANNERS (matching inbloom.ae) ─── */
 const CATEGORIES = [
@@ -225,7 +226,10 @@ export default function HomePage() {
         const prods = data.products || data || [];
         setProducts(prods.length > 0 ? prods : DEMO_PRODUCTS);
       })
-      .catch(() => setProducts(DEMO_PRODUCTS))
+      .catch(() => {
+        console.warn('Backend API failed to load products. Using fallback DEMO_PRODUCTS.');
+        setProducts(DEMO_PRODUCTS);
+      })
       .finally(() => setLoading(false));
   }, []);
 

@@ -5,6 +5,7 @@ import api from '../api/axiosConfig';
 import ProductCard from '../components/ProductCard';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { getFallbackImage, getProductImage } from '../utils/imageUtils';
+import { DEMO_PRODUCTS } from '../utils/demoData';
 
 export default function ProductsPage() {
   const { categorySlug } = useParams();
@@ -59,11 +60,21 @@ export default function ProductsPage() {
         queryParams.append('limit', 12);
 
         const { data } = await api.get(`/products?${queryParams.toString()}`);
-        setProducts(data.products || []);
-        setTotalPages(data.pages || 1);
-        setTotalProducts(data.total || 0);
+        if (data && data.products && data.products.length > 0) {
+          setProducts(data.products);
+          setTotalPages(data.pages || 1);
+          setTotalProducts(data.total || data.products.length);
+        } else {
+          console.warn('Backend API returned empty products. Using fallback DEMO_PRODUCTS.');
+          setProducts(DEMO_PRODUCTS);
+          setTotalPages(1);
+          setTotalProducts(DEMO_PRODUCTS.length);
+        }
       } catch (err) {
-        console.error('Error loading products:', err);
+        console.warn('Backend API failed to load products. Using fallback DEMO_PRODUCTS.', err);
+        setProducts(DEMO_PRODUCTS);
+        setTotalPages(1);
+        setTotalProducts(DEMO_PRODUCTS.length);
       } finally {
         setLoading(false);
       }
