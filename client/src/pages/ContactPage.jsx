@@ -36,12 +36,12 @@ export default function ContactPage() {
 
       <section style={{ padding: '80px 0' }}>
         <div className="container-site">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80 }}>
-            {/* Form */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+            {/* Left: Form */}
             <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 32, color: '#1a1a1a', marginBottom: 32 }}>Send a Message</h2>
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label style={labelStyle}>Name</label>
                     <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Your name" style={inputStyle} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'} required />

@@ -20,9 +20,9 @@ export default function BlogPage() {
 
       <section style={{ padding: '80px 0' }}>
         <div className="container-site">
-          {/* Featured Post */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, marginBottom: 48, background: '#f9f5f3' }}>
-            <div style={{ overflow: 'hidden', aspectRatio: '4/3' }}>
+          {posts.length > 0 && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-0 mb-12 bg-[#f9f5f3]">
+            <div style={{ position: 'relative', aspectRatio: '4/3' }}>
               <img src={featured.img} alt={featured.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div style={{ padding: '60px 48px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -35,10 +35,11 @@ export default function BlogPage() {
               </Link>
             </div>
           </motion.div>
+          )}
 
-          {/* Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
-            {rest.map((post, i) => (
+          {posts.length > 1 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {posts.slice(1).map((post, i) => (
               <motion.div key={post.slug} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <Link to={`/blog/${post.slug}`} style={{ display: 'block', textDecoration: 'none' }}>
                   <div style={{ overflow: 'hidden', aspectRatio: '3/2', marginBottom: 20 }}>

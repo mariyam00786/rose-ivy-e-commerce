@@ -40,7 +40,7 @@ export default function DashboardPage() {
 
   return (
     <div style={{ background: '#f9f5f3', minHeight: '80vh', padding: '60px 20px' }}>
-      <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+      <div className="container-site max-w-6xl mx-auto px-4 md:px-6">
         <div style={{ marginBottom: 40 }}>
           <span style={{ fontFamily: 'Inter', fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#D1AFA1' }}>Account</span>
           <h1 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 36, color: '#1a1a1a', letterSpacing: '0.03em', marginTop: 8 }}>
@@ -48,9 +48,9 @@ export default function DashboardPage() {
           </h1>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: 24 }}>
+        <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar */}
-          <div>
+          <aside className="w-full md:w-56 shrink-0 bg-rose-50/30 p-6 border border-rose-100 rounded-xl self-start">
             <div style={{ background: '#fff', overflow: 'hidden' }}>
               {TABS.map(tab => {
                 const Icon = tab.icon;
@@ -75,12 +75,12 @@ export default function DashboardPage() {
                 Sign Out
               </button>
             </div>
-          </div>
+          </aside>
 
-          {/* Content */}
-          <div style={{ background: '#fff' }}>
+          {/* Main Content */}
+          <div className="flex-1 min-w-0">
             {active === 'profile' && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '32px 36px' }}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '32px 36px', background: '#fff' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
                   <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 24, color: '#1a1a1a' }}>Profile Information</h2>
                   {!editing ? (

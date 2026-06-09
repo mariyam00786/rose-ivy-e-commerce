@@ -54,7 +54,7 @@ export default function BespokePage() {
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 40, color: '#1a1a1a' }}>How It Works</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 40 }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {STEPS.map((s, i) => {
               const Icon = s.icon;
               return (
@@ -87,8 +87,8 @@ export default function BespokePage() {
               <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#888' }}>Our design team will contact you within 24 hours to discuss your bespoke arrangement.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label style={labelStyle}>Name *</label>
                   <input value={form.name} onChange={e => setForm({...form, name: e.target.value})} placeholder="Your name" style={inputStyle} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'} required />
