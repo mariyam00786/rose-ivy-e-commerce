@@ -72,7 +72,7 @@ export const DEMO_PRODUCTS = [
     description: 'A smaller luxury box featuring delicate blush pink preserved roses.',
     price: 850,
     category: { name: 'Flower Boxes', slug: 'flower-boxes' },
-    images: ['https://inbloom.ae/wp-content/uploads/2025/05/291A8275.jpg'],
+    images: ['https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&q=80&w=800'],
     stockStatus: 'in-stock',
     countInStock: 12,
   },
@@ -83,7 +83,7 @@ export const DEMO_PRODUCTS = [
     description: 'Deep burgundy preserved roses in an intricate ceramic vase.',
     price: 2800,
     category: { name: 'Interior Vase Bouquets', slug: 'interior-vase-bouquets' },
-    images: ['https://inbloom.ae/wp-content/uploads/2025/05/1L1A8086-scaled.jpg'],
+    images: ['https://images.unsplash.com/photo-1560717845-968823efbee1?auto=format&fit=crop&q=80&w=800'],
     stockStatus: 'in-stock',
     countInStock: 6,
   }

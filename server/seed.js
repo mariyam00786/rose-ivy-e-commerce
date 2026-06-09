@@ -52,9 +52,9 @@ const seedData = async () => {
 
     // 2. Seed Categories
     const categoriesData = [
-      { name: 'Flower Boxes', slug: 'flower-boxes', image: 'https://images.unsplash.com/photo-1561181286-d3fee7d55364?auto=format&fit=crop&w=800&q=80' },
+      { name: 'Flower Boxes', slug: 'flower-boxes', image: 'https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?auto=format&fit=crop&q=80&w=800' },
       { name: 'Signature Boxes', slug: 'signature-boxes', image: 'https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=800&q=80' },
-      { name: 'Interior Vase Bouquets', slug: 'interior-vase-bouquets', image: 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=800&q=80' },
+      { name: 'Interior Vase Bouquets', slug: 'interior-vase-bouquets', image: 'https://images.unsplash.com/photo-1560717845-968823efbee1?auto=format&fit=crop&q=80&w=800' },
       { name: 'Interior Statement Pieces', slug: 'interior-statement-pieces', image: 'https://images.unsplash.com/photo-1508784411316-02b8cd4d3a3a?auto=format&fit=crop&w=800&q=80' },
       { name: 'Wedding Flowers', slug: 'wedding-flowers', image: 'https://images.unsplash.com/photo-1519225495810-7512c696505a?auto=format&fit=crop&w=800&q=80' },
       { name: 'Seasonal Collections', slug: 'seasonal-collections', image: 'https://images.unsplash.com/photo-1520763185298-1b434c919102?auto=format&fit=crop&w=800&q=80' },
