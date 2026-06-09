@@ -255,55 +255,61 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Overlay */}
         {mobileOpen && (
           <div style={{
-            background: '#1a1a1a', borderTop: '1px solid rgba(255,255,255,0.1)',
-            maxHeight: '80vh', overflowY: 'auto',
+            position: 'fixed', top: 102, left: 0, right: 0, bottom: 0,
+            background: '#f9f5f3', zIndex: 999,
+            overflowY: 'auto', paddingBottom: 100,
+            animation: 'fadeIn 0.2s ease'
           }}>
-            {NAV_LINKS.map(link => (
-              <div key={link.label}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Link
-                    to={link.to}
-                    style={{
-                      display: 'block', flex: 1, padding: '14px 24px',
-                      fontFamily: 'Inter', fontSize: 11, letterSpacing: '0.15em',
-                      textTransform: 'uppercase', color: navIconColor,
-                      textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.06)',
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                  {link.children && (
-                    <button
-                      onClick={() => setMobileExpanded(mobileExpanded === link.label ? null : link.label)}
-                      style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.6)', padding: '14px 20px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+            <div className="px-4 py-6">
+              {NAV_LINKS.map(link => (
+                <div key={link.label}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Link
+                      to={link.to}
+                      onClick={() => !link.children && setMobileOpen(false)}
+                      style={{
+                        display: 'block', flex: 1, padding: '16px 0',
+                        fontFamily: 'Inter', fontSize: 13, letterSpacing: '0.15em',
+                        textTransform: 'uppercase', color: '#1a1a1a',
+                        textDecoration: 'none', borderBottom: '1px solid rgba(0,0,0,0.06)',
+                      }}
                     >
-                      <ChevronDown size={14} style={{ transform: mobileExpanded === link.label ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                    </button>
+                      {link.label}
+                    </Link>
+                    {link.children && (
+                      <button
+                        onClick={() => setMobileExpanded(mobileExpanded === link.label ? null : link.label)}
+                        style={{ background: 'none', border: 'none', color: '#1a1a1a', padding: '16px 10px', cursor: 'pointer', borderBottom: '1px solid rgba(0,0,0,0.06)' }}
+                      >
+                        <ChevronDown size={16} style={{ transform: mobileExpanded === link.label ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                      </button>
+                    )}
+                  </div>
+                  {link.children && mobileExpanded === link.label && (
+                    <div style={{ background: 'rgba(0,0,0,0.02)', padding: '10px 0' }}>
+                      {link.children.map(child => (
+                        <Link
+                          key={child.label}
+                          to={child.to}
+                          onClick={() => setMobileOpen(false)}
+                          style={{
+                            display: 'block', padding: '12px 24px',
+                            fontFamily: 'Inter', fontSize: 11, letterSpacing: '0.12em',
+                            textTransform: 'uppercase', color: 'rgba(0,0,0,0.6)',
+                            textDecoration: 'none', borderBottom: '1px solid rgba(0,0,0,0.03)',
+                          }}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
                   )}
                 </div>
-                {link.children && mobileExpanded === link.label && (
-                  <div style={{ background: '#111' }}>
-                    {link.children.map(child => (
-                      <Link
-                        key={child.label}
-                        to={child.to}
-                        style={{
-                          display: 'block', padding: '11px 36px',
-                          fontFamily: 'Inter', fontSize: 10, letterSpacing: '0.12em',
-                          textTransform: 'uppercase', color: 'rgba(255,255,255,0.6)',
-                          textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.04)',
-                        }}
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </header>

@@ -59,7 +59,7 @@ export default function Footer() {
   return (
     <footer style={{ background: '#f9f5f3', color: '#1a1a1a' }}>
       {/* Main Footer */}
-      <div className="container-site" style={{ padding: '64px 40px 48px' }}>
+      <div className="container-site py-12 md:py-16 px-4 md:px-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
 
           {/* Brand Column */}
@@ -138,7 +138,7 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div style={{ borderTop: '1px solid rgba(26,26,26,0.08)' }}>
-        <div className="container-site" style={{ padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+        <div className="container-site py-6 px-4 md:px-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
           <p style={{ fontFamily: 'Inter', fontSize: 11, color: 'rgba(26,26,26,0.5)', letterSpacing: '0.05em' }}>
             © {new Date().getFullYear()} Rose & Ivy Floral Boutique. All rights reserved.
           </p>
@@ -152,7 +152,7 @@ export default function Footer() {
               }}>{pm}</span>
             ))}
           </div>
-          <div style={{ display: 'flex', gap: 24 }}>
+          <div className="flex flex-wrap justify-center gap-4 md:gap-6">
             {['Privacy Policy', 'Terms', 'Cookies'].map(l => (
               <Link key={l} to="/" style={{ fontFamily: 'Inter', fontSize: 11, color: 'rgba(26,26,26,0.5)', textDecoration: 'none', letterSpacing: '0.05em' }}
                 onMouseEnter={e => e.currentTarget.style.color = '#D1AFA1'}
