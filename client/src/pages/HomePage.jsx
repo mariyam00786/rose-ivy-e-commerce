@@ -560,17 +560,6 @@ export default function HomePage() {
   );
 }
 
-/* ─── DEMO DATA ─── */
-const DEMO_PRODUCTS = [
-  { _id: '1', name: 'Eternal Rose Box', price: 450, imageUrl: 'https://inbloom.ae/wp-content/uploads/61611C01-32D3-4F9A-8574-A42D3862F129.jpg', slug: 'eternal-rose-box', category: { name: 'Flower Boxes' } },
-  { _id: '2', name: 'Signature Suede Collection', price: 680, salePrice: 540, imageUrl: 'https://inbloom.ae/wp-content/uploads/706719212_17960656125104145_777686201114964296_n.jpg', slug: 'signature-suede', category: { name: 'Signature Boxes' } },
-  { _id: '3', name: 'Ivory Interior Bouquet', price: 890, imageUrl: 'https://inbloom.ae/wp-content/uploads/IMG_2875-scaled.webp', slug: 'ivory-interior', category: { name: 'Interior Vase Bouquets' } },
-  { _id: '4', name: 'Wedding Keepsake Bouquet', price: 1200, imageUrl: 'https://inbloom.ae/wp-content/uploads/2026/01/DO01050011.jpg', slug: 'wedding-keepsake', category: { name: 'Wedding Flowers' } },
-  { _id: '5', name: 'Sunflower Seasonal Set', price: 350, imageUrl: 'https://inbloom.ae/wp-content/uploads/2025/05/L1080140-Photoroom-3.jpg', slug: 'sunflower-seasonal', category: { name: 'Seasonal Collections' } },
-  { _id: '6', name: 'Green Orchid Statement', price: 1450, imageUrl: 'https://inbloom.ae/wp-content/uploads/2025/05/green-orchids-Photoroom-7-e1746599286884.jpg', slug: 'green-orchid', category: { name: 'Interior Statement' } },
-  { _id: '7', name: 'Blush Petal Gift Box', price: 320, salePrice: 260, imageUrl: 'https://inbloom.ae/wp-content/uploads/61611C01-32D3-4F9A-8574-A42D3862F129.jpg', slug: 'blush-petal', category: { name: 'Flower Boxes' } },
-  { _id: '8', name: 'Rose Eternal Vase', price: 750, imageUrl: 'https://inbloom.ae/wp-content/uploads/IMG_2875-scaled.webp', slug: 'rose-eternal-vase', category: { name: 'Interior Vase Bouquets' } },
-];
 
 const TESTIMONIALS = [
   { name: 'Fatima Al Mansoori', location: 'Dubai, UAE', text: 'The most beautiful preserved flowers I have ever seen. They still look as fresh as the day I received them, 8 months later. Truly a luxury experience.' },
