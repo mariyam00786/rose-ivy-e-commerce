@@ -9,6 +9,7 @@ import { useAuth } from '../contexts/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ProductCard from '../components/ProductCard';
 import { toast } from 'react-toastify';
+import { DEMO_PRODUCTS } from '../utils/demoData';
 
 export default function ProductDetailPage() {
   const { slug } = useParams();
@@ -43,21 +44,31 @@ export default function ProductDetailPage() {
       setLoading(true);
       try {
         const { data } = await api.get(`/products/${slug}`);
-        setProduct(data.product);
-        setImages([getProductImage(data.product)]);
-        setRelatedProducts(data.related || []);
-        setActiveImageIdx(0);
-        setQty(1);
+        if (data && data.product) {
+          setProduct(data.product);
+          setRelatedProducts(data.related || []);
+          setActiveImageIdx(0);
+          setQty(1);
 
-        // Check wishlist
-        if (user && data.product) {
-          setIsWishlisted(
-            user.wishlist?.some(item => (item._id || item) === data.product._id) || false
-          );
+          if (user) {
+            setIsWishlisted(
+              user.wishlist?.some(item => (item._id || item) === data.product._id) || false
+            );
+          }
+        } else {
+          throw new Error("No product returned");
         }
       } catch (err) {
-        console.error('Error loading product:', err);
-        toast.error('Could not load product details');
+        console.warn('Backend API failed. Falling back to DEMO_PRODUCTS.', err);
+        const fallbackProduct = DEMO_PRODUCTS.find(p => p.slug === slug);
+        if (fallbackProduct) {
+          setProduct(fallbackProduct);
+          setRelatedProducts(DEMO_PRODUCTS.filter(p => p.slug !== slug).slice(0, 4));
+          setActiveImageIdx(0);
+          setQty(1);
+        } else {
+          toast.error('Could not load product details');
+        }
       } finally {
         setLoading(false);
       }
