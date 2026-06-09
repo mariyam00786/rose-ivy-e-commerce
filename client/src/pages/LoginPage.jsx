@@ -36,13 +36,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '100vh' }}>
-      {/* Left: Brand panel */}
-      <div style={{
-        position: 'relative', background: '#1a1a1a',
-        display: 'flex', flexDirection: 'column', justifyContent: 'center',
-        padding: '80px 60px', overflow: 'hidden',
-      }}>
+    <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
+      <div className="relative bg-[#1a1a1a] flex-col justify-center p-8 md:p-16 overflow-hidden hidden md:flex">
         <img
           src="https://inbloom.ae/wp-content/uploads/61611C01-32D3-4F9A-8574-A42D3862F129.jpg"
           alt="Flowers"
@@ -65,7 +60,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right: Form */}
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px 60px', background: '#fff' }}>
+      <div className="flex flex-col justify-center p-8 md:p-16 bg-white">
         <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
           <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 32, color: '#1a1a1a', letterSpacing: '0.03em', marginBottom: 8 }}>Sign In</h2>
           <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#888', marginBottom: 40 }}>

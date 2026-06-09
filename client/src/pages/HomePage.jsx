@@ -500,7 +500,7 @@ export default function HomePage() {
             <span className="section-label" style={{ display: 'block', textAlign: 'center' }}>Happy Clients</span>
             <h2 className="section-title" style={{ textAlign: 'center' }}>What Our Clients Say</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32 }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((t, i) => (
               <motion.div
                 key={i}
@@ -532,7 +532,7 @@ export default function HomePage() {
           <span className="section-label" style={{ display: 'block', textAlign: 'center' }}>@roseandivy.ae</span>
           <h2 className="section-title" style={{ textAlign: 'center' }}>Follow Our Story</h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 0 }}>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-0">
           {INSTA_IMGS.map((src, i) => (
             <a key={i} href="https://instagram.com" target="_blank" rel="noreferrer"
               style={{ display: 'block', aspectRatio: '1', overflow: 'hidden', position: 'relative' }}

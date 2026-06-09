@@ -61,9 +61,9 @@ export default function RegisterPage() {
   });
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '100vh' }}>
+    <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen">
       {/* Left: Form */}
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '80px 60px', background: '#fff', overflowY: 'auto' }}>
+      <div className="flex flex-col justify-center p-8 md:p-16 bg-white overflow-y-auto">
         <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}>
           <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 32, color: '#1a1a1a', letterSpacing: '0.03em', marginBottom: 8 }}>Create Account</h2>
           <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#888', marginBottom: 40 }}>
@@ -168,11 +168,7 @@ export default function RegisterPage() {
       </div>
 
       {/* Right: Brand Panel */}
-      <div style={{
-        position: 'relative', background: '#1a1a1a',
-        display: 'flex', flexDirection: 'column', justifyContent: 'center',
-        padding: '80px 60px', overflow: 'hidden',
-      }}>
+      <div className="relative bg-[#1a1a1a] flex flex-col justify-center p-8 md:p-16 overflow-hidden hidden md:flex">
         <img
           src="https://inbloom.ae/wp-content/uploads/IMG_2875-scaled.webp"
           alt="Flowers"
