@@ -320,11 +320,11 @@ export default function Navbar() {
           position: 'fixed', inset: 0, zIndex: 2000,
           background: 'rgba(26,26,26,0.95)',
           display: 'flex', flexDirection: 'column', alignItems: 'center',
-          paddingTop: 120, paddingBottom: 40, paddingLeft: 20, paddingRight: 20,
+          paddingTop: 80, paddingBottom: 40, paddingLeft: 16, paddingRight: 16,
         }}>
           <button
             onClick={() => { setSearchOpen(false); setSearchQuery(''); setSearchResults([]); }}
-            style={{ position: 'absolute', top: 24, right: 32, background: 'none', border: 'none', cursor: 'pointer', color: navTextColor }}
+            style={{ position: 'absolute', top: 16, right: 16, background: 'none', border: 'none', cursor: 'pointer', color: navTextColor }}
           >
             <X size={28} />
           </button>
@@ -339,9 +339,9 @@ export default function Navbar() {
               onKeyDown={e => { if (e.key === 'Enter' && searchQuery.trim()) { navigate(`/products?q=${encodeURIComponent(searchQuery)}`); setSearchOpen(false); } }}
               placeholder="Type to search..."
               style={{
-                width: '100%', padding: '18px 56px 18px 20px',
+                width: '100%', padding: '14px 48px 14px 16px',
                 background: 'transparent', border: 'none', borderBottom: '1px solid rgba(255,255,255,0.3)',
-                color: navTextColor, fontFamily: 'Raleway', fontSize: 28, fontWeight: 300,
+                color: navTextColor, fontFamily: 'Raleway', fontSize: 'clamp(18px, 4vw, 28px)', fontWeight: 300,
                 letterSpacing: '0.05em', outline: 'none',
               }}
             />
@@ -350,7 +350,7 @@ export default function Navbar() {
 
           {/* Search Results */}
           {searchResults.length > 0 && (
-            <div style={{ width: '100%', maxWidth: 640, marginTop: 32, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 16 }}>
+            <div style={{ width: '100%', maxWidth: 640, marginTop: 24, display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 12 }}>
               {searchResults.slice(0, 6).map(p => (
                 <Link
                   key={p._id}

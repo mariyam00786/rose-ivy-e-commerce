@@ -13,23 +13,23 @@ export default function BlogPage() {
   const [featured, ...rest] = POSTS;
   return (
     <div style={{ background: '#fff' }}>
-      <section style={{ background: '#1a1a1a', padding: '100px 0 60px', textAlign: 'center' }}>
-        <span style={{ fontFamily: 'Inter', fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#D1AFA1', display: 'block', marginBottom: 16 }}>Stories & Inspiration</span>
-        <h1 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 52, color: '#fff', letterSpacing: '0.04em' }}>The Journal</h1>
+      <section className="bg-[#1a1a1a] pt-20 pb-12 md:pt-24 md:pb-16 text-center px-4">
+        <span className="font-inter text-[10px] tracking-[0.3em] uppercase text-[#D1AFA1] block mb-4">Stories & Inspiration</span>
+        <h1 className="font-raleway font-light text-3xl md:text-5xl text-white tracking-wide">The Journal</h1>
       </section>
 
-      <section style={{ padding: '80px 0' }}>
-        <div className="container-site">
+      <section className="py-12 md:py-20">
+        <div className="container-site px-4 md:px-6">
           {POSTS.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-0 mb-12 bg-[#f9f5f3]">
             <div style={{ position: 'relative', aspectRatio: '4/3' }}>
               <img src={featured.img} alt={featured.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
-            <div style={{ padding: '60px 48px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <span style={{ fontFamily: 'Inter', fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#D1AFA1', marginBottom: 16, display: 'block' }}>{featured.category}</span>
-              <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 32, color: '#1a1a1a', letterSpacing: '0.03em', marginBottom: 16, lineHeight: 1.2 }}>{featured.title}</h2>
-              <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#777', lineHeight: 1.85, marginBottom: 24 }}>{featured.excerpt}</p>
-              <p style={{ fontFamily: 'Inter', fontSize: 11, color: '#bbb', marginBottom: 28, letterSpacing: '0.08em' }}>{featured.date}</p>
+            <div className="p-6 md:p-12 flex flex-col justify-center">
+              <span className="font-inter text-[10px] tracking-[0.2em] uppercase text-[#D1AFA1] mb-3 md:mb-4 block">{featured.category}</span>
+              <h2 className="font-raleway font-light text-xl md:text-[32px] text-[#1a1a1a] tracking-wide mb-3 md:mb-4 leading-tight">{featured.title}</h2>
+              <p className="font-inter text-[13px] text-[#777] leading-relaxed mb-4 md:mb-6">{featured.excerpt}</p>
+              <p className="font-inter text-[11px] text-[#bbb] mb-5 md:mb-7 tracking-wide">{featured.date}</p>
               <Link to={`/blog/${featured.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'Inter', fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#1a1a1a', textDecoration: 'none', borderBottom: '1px solid #1a1a1a', paddingBottom: 2, width: 'fit-content' }}>
                 Read Article <ArrowRight size={13} />
               </Link>

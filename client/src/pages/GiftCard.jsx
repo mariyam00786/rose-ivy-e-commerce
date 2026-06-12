@@ -66,11 +66,11 @@ export default function GiftCard() {
   };
 
   return (
-    <section className="min-h-screen bg-rose-50 px-6 py-24">
-      <div className="mx-auto grid max-w-6xl gap-8 rounded-3xl border border-rose-100 bg-white p-8 shadow-xl lg:grid-cols-[1fr_1.1fr]">
-        <div className="rounded-3xl bg-gradient-to-br from-rose-100 via-white to-rose-50 p-8">
+    <section className="min-h-screen bg-rose-50 px-4 md:px-6 py-16 md:py-24">
+      <div className="mx-auto grid max-w-6xl gap-6 md:gap-8 rounded-3xl border border-rose-100 bg-white p-4 md:p-8 shadow-xl lg:grid-cols-[1fr_1.1fr]">
+        <div className="rounded-3xl bg-gradient-to-br from-rose-100 via-white to-rose-50 p-4 md:p-8">
           <p className="text-xs uppercase tracking-[0.25em] text-brand-rose">Gift Card</p>
-          <h1 className="mt-3 font-serif text-4xl text-brand-black">Give the gift of choice.</h1>
+          <h1 className="mt-3 font-serif text-2xl md:text-4xl text-brand-black">Give the gift of choice.</h1>
           <p className="mt-4 text-sm text-brand-gray">Choose a value, add a personal message, and send it instantly by email after payment.</p>
           <div className="mt-8 rounded-3xl border border-rose-200 bg-white p-6 shadow-sm">
             <div className="text-xs uppercase tracking-[0.25em] text-brand-gray">Amount</div>

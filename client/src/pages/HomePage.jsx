@@ -360,9 +360,9 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           NEW ARRIVALS
       ═══════════════════════════════════════ */}
-      <section ref={prodRef} style={{ padding: '80px 0', background: '#fff' }}>
-        <div className="container-site">
-          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 48 }}>
+      <section ref={prodRef} className="py-12 md:py-20 bg-white">
+        <div className="container-site px-4 md:px-6">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8 md:mb-12">
             <div>
               <span className="section-label">New Arrivals</span>
               <h2 className="section-title">Latest Collections</h2>
@@ -413,15 +413,15 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           BESPOKE BANNER
       ═══════════════════════════════════════ */}
-      <section style={{ position: 'relative', height: 500, overflow: 'hidden', background: '#1a1a1a' }}>
+      <section className="relative min-h-[360px] md:h-[500px] overflow-hidden bg-[#1a1a1a]">
         <img
           src="https://inbloom.ae/wp-content/uploads/2026/01/DO01050011.jpg"
           alt="Bespoke"
-          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.55 }}
+          className="absolute inset-0 w-full h-full object-cover opacity-55"
           loading="lazy"
         />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(26,26,26,0.4)' }} />
-        <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: '0 40px' }}>
+        <div className="absolute inset-0 bg-[rgba(26,26,26,0.4)]" />
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 md:px-10 py-16">
           <span style={{ fontFamily: 'Inter', fontSize: 10, letterSpacing: '0.35em', textTransform: 'uppercase', color: '#D1AFA1', display: 'block', marginBottom: 16 }}>Exclusive Service</span>
           <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 'clamp(28px, 5vw, 56px)', color: '#fff', letterSpacing: '0.05em', marginBottom: 20, lineHeight: 1.15 }}>
             Bespoke Floral Design
@@ -436,8 +436,8 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           WHY PRESERVED FLOWERS
       ═══════════════════════════════════════ */}
-      <section ref={whyRef} style={{ padding: '80px 0', background: '#f9f5f3' }}>
-        <div className="container-site">
+      <section ref={whyRef} className="py-12 md:py-20 bg-[#f9f5f3]">
+        <div className="container-site px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <motion.div
               initial={{ opacity: 0, x: -40 }}
@@ -478,11 +478,8 @@ export default function HomePage() {
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
-              <div style={{
-                position: 'absolute', bottom: -24, right: -24,
-                background: '#1a1a1a', padding: '24px 28px',
-                fontFamily: 'Inter', color: '#fff',
-              }}>
+              <div className="absolute -bottom-4 -right-4 md:bottom-[-24px] md:right-[-24px] bg-[#1a1a1a] p-4 md:p-6"
+              >
                 <p style={{ fontSize: 32, fontWeight: 700, color: '#D1AFA1', lineHeight: 1 }}>1+</p>
                 <p style={{ fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: 4, color: 'rgba(255,255,255,0.7)' }}>Year Lifespan</p>
               </div>
@@ -549,8 +546,8 @@ export default function HomePage() {
       {/* ═══════════════════════════════════════
           FREE DELIVERY BANNER
       ═══════════════════════════════════════ */}
-      <section style={{ background: '#D1AFA1', padding: '28px 0', textAlign: 'center' }}>
-        <p style={{ fontFamily: 'Inter', fontSize: 11, fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#fff' }}>
+      <section className="bg-[#D1AFA1] py-5 md:py-7 text-center px-4">
+        <p className="font-inter text-[10px] md:text-[11px] font-medium tracking-[0.15em] md:tracking-[0.25em] uppercase text-white leading-relaxed">
           Free delivery on orders over AED 350 within Dubai &nbsp;·&nbsp; 
           <Link to="/products" style={{ color: '#fff', textDecoration: 'underline', textUnderlineOffset: 3 }}>Shop Now</Link>
         </p>

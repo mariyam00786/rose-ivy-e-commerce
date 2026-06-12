@@ -36,23 +36,23 @@ export default function BespokePage() {
   return (
     <div style={{ background: '#fff' }}>
       {/* Hero */}
-      <section style={{ position: 'relative', height: 520, overflow: 'hidden', background: '#1a1a1a' }}>
-        <img src="https://inbloom.ae/wp-content/uploads/2026/01/DO01050011.jpg" alt="Bespoke" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.4 }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(26,26,26,0.4)' }} />
-        <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: '0 40px' }}>
-          <span style={{ fontFamily: 'Inter', fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#D1AFA1', display: 'block', marginBottom: 16 }}>Exclusive Service</span>
-          <h1 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 'clamp(32px, 6vw, 64px)', color: '#fff', letterSpacing: '0.04em', lineHeight: 1.1, marginBottom: 20 }}>Bespoke Floral Design</h1>
-          <p style={{ fontFamily: 'Inter', fontSize: 15, color: 'rgba(255,255,255,0.75)', maxWidth: 540, lineHeight: 1.8 }}>
+      <section className="relative min-h-[400px] md:h-[520px] overflow-hidden bg-[#1a1a1a]">
+        <img src="https://inbloom.ae/wp-content/uploads/2026/01/DO01050011.jpg" alt="Bespoke" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+        <div className="absolute inset-0 bg-[rgba(26,26,26,0.4)]" />
+        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 md:px-10 py-16">
+          <span className="font-inter text-[10px] tracking-[0.3em] uppercase text-[#D1AFA1] block mb-4">Exclusive Service</span>
+          <h1 className="font-raleway font-light text-[clamp(28px,6vw,64px)] text-white tracking-wide leading-tight mb-5">Bespoke Floral Design</h1>
+          <p className="font-inter text-sm md:text-[15px] text-white/75 max-w-lg leading-relaxed">
             Commission a one-of-a-kind preserved floral creation tailored to your space, event, or loved one — crafted exclusively by our artisan designers.
           </p>
         </div>
       </section>
 
       {/* How it works */}
-      <section style={{ padding: '80px 0', background: '#f9f5f3' }}>
-        <div className="container-site">
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 40, color: '#1a1a1a' }}>How It Works</h2>
+      <section className="py-12 md:py-20 bg-[#f9f5f3]">
+        <div className="container-site px-4 md:px-6">
+          <div className="text-center mb-10 md:mb-14">
+            <h2 className="font-raleway font-light text-2xl md:text-[40px] text-[#1a1a1a]">How It Works</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {STEPS.map((s, i) => {
@@ -71,11 +71,11 @@ export default function BespokePage() {
       </section>
 
       {/* Form */}
-      <section style={{ padding: '80px 0' }}>
-        <div style={{ maxWidth: 680, margin: '0 auto', padding: '0 20px' }}>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 36, color: '#1a1a1a', marginBottom: 12 }}>Submit Your Enquiry</h2>
-            <p style={{ fontFamily: 'Inter', fontSize: 13, color: '#888', lineHeight: 1.7 }}>Tell us about your vision and our design team will reach out within 24 hours.</p>
+      <section className="py-12 md:py-20">
+        <div className="max-w-2xl mx-auto px-4 md:px-6">
+          <div className="text-center mb-8 md:mb-12">
+            <h2 className="font-raleway font-light text-2xl md:text-4xl text-[#1a1a1a] mb-3">Submit Your Enquiry</h2>
+            <p className="font-inter text-[13px] text-[#888] leading-relaxed">Tell us about your vision and our design team will reach out within 24 hours.</p>
           </div>
 
           {submitted ? (
@@ -102,7 +102,7 @@ export default function BespokePage() {
                 <label style={labelStyle}>Phone / WhatsApp</label>
                 <input value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} placeholder="+971 50 000 0000" style={inputStyle} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label style={labelStyle}>Event / Occasion</label>
                   <select value={form.eventType} onChange={e => setForm({...form, eventType: e.target.value})} style={inputStyle} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'}>

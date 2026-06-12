@@ -39,18 +39,18 @@ export default function DashboardPage() {
   };
 
   return (
-    <div style={{ background: '#f9f5f3', minHeight: '80vh', padding: '60px 20px' }}>
-      <div className="container-site max-w-6xl mx-auto px-4 md:px-6">
-        <div style={{ marginBottom: 40 }}>
-          <span style={{ fontFamily: 'Inter', fontSize: 10, letterSpacing: '0.25em', textTransform: 'uppercase', color: '#D1AFA1' }}>Account</span>
-          <h1 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 36, color: '#1a1a1a', letterSpacing: '0.03em', marginTop: 8 }}>
+    <div className="bg-[#f9f5f3] min-h-[80vh] pt-12 pb-16 px-4 md:px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-8">
+          <span className="font-inter text-[10px] tracking-[0.25em] uppercase text-[#D1AFA1]">Account</span>
+          <h1 className="font-raleway font-light text-2xl md:text-4xl text-[#1a1a1a] tracking-wide mt-2">
             Welcome, {user?.name?.split(' ')[0] || 'Guest'}
           </h1>
         </div>
 
         <div className="flex flex-col md:flex-row gap-8">
           {/* Sidebar */}
-          <aside className="w-full md:w-56 shrink-0 bg-rose-50/30 p-6 border border-rose-100 rounded-xl self-start">
+          <aside className="w-full md:w-56 shrink-0 bg-white/50 p-4 md:p-6 border border-rose-100 rounded-xl self-start">
             <div style={{ background: '#fff', overflow: 'hidden' }}>
               {TABS.map(tab => {
                 const Icon = tab.icon;
@@ -80,7 +80,7 @@ export default function DashboardPage() {
           {/* Main Content */}
           <div className="flex-1 min-w-0">
             {active === 'profile' && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '32px 36px', background: '#fff' }}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 md:p-8 bg-white">
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
                   <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 24, color: '#1a1a1a' }}>Profile Information</h2>
                   {!editing ? (
@@ -118,7 +118,7 @@ export default function DashboardPage() {
             )}
 
             {active === 'orders' && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '32px 36px' }}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 md:p-8">
                 <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 24, color: '#1a1a1a', marginBottom: 24 }}>My Orders</h2>
                 {orders.length === 0 ? (
                   <div style={{ padding: '48px 0', textAlign: 'center' }}>
@@ -142,7 +142,7 @@ export default function DashboardPage() {
             )}
 
             {active === 'addresses' && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '32px 36px' }}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 md:p-8">
                 <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 24, color: '#1a1a1a', marginBottom: 24 }}>Saved Addresses</h2>
                 <div style={{ padding: '48px 0', textAlign: 'center' }}>
                   <MapPin size={40} style={{ color: '#D1AFA1', margin: '0 auto 16px' }} />
@@ -152,7 +152,7 @@ export default function DashboardPage() {
             )}
 
             {active === 'wishlist' && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={{ padding: '32px 36px' }}>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-4 md:p-8">
                 <h2 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 24, color: '#1a1a1a', marginBottom: 24 }}>My Wishlist</h2>
                 <div style={{ padding: '48px 0', textAlign: 'center' }}>
                   <Heart size={40} style={{ color: '#D1AFA1', margin: '0 auto 16px' }} />
