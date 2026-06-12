@@ -82,10 +82,9 @@ export default function CheckoutPage() {
         shippingAddress: mappedShipping,
         paymentMethod,
         total: grandTotal,
-        totalPrice: grandTotal,
         deliveryFee,
-        discount: discountAmount,
-        couponCode: discountCode,
+        discountAmount,
+        discountCode,
       });
       await clearCart();
       toast.success('Order placed successfully! 🌸');

@@ -34,6 +34,11 @@ export default function ProductDetailPage() {
   // Wishlist state
   const [isWishlisted, setIsWishlisted] = useState(false);
 
+  // Reviews state
+  const [reviews, setReviews] = useState([]);
+  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '' });
+  const [submittingReview, setSubmittingReview] = useState(false);
+
   // Mobile sticky bar state
   const [showStickyBar, setShowStickyBar] = useState(false);
   const mainCtaRef = useRef(null);
@@ -75,6 +80,36 @@ export default function ProductDetailPage() {
     };
     fetchProduct();
   }, [slug, user]);
+
+  // Fetch reviews when product loads
+  useEffect(() => {
+    if (product?._id) {
+      api.get(`/reviews/${product._id}`)
+        .then(({ data }) => setReviews(data))
+        .catch(() => setReviews([]));
+    }
+  }, [product?._id]);
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!user) { toast.info('Please log in to leave a review'); return; }
+    if (!reviewForm.comment.trim()) { toast.error('Please write a comment'); return; }
+    setSubmittingReview(true);
+    try {
+      const { data } = await api.post('/reviews', {
+        productId: product._id,
+        rating: reviewForm.rating,
+        comment: reviewForm.comment
+      });
+      setReviews(prev => [data, ...prev]);
+      setReviewForm({ rating: 5, comment: '' });
+      toast.success('Review submitted! Thank you 🌸');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Could not submit review');
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
 
   // Handle scroll to toggle mobile sticky bar
   useEffect(() => {
@@ -410,6 +445,70 @@ export default function ProductDetailPage() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Reviews Section */}
+      <div className="mx-auto max-w-7xl px-6 mt-20 border-t border-rose-100 pt-16">
+        <h2 className="font-serif text-2xl md:text-3xl text-brand-black text-center mb-10">Customer Reviews</h2>
+        
+        {/* Review Form */}
+        {user && (
+          <form onSubmit={handleSubmitReview} className="max-w-2xl mx-auto mb-12 bg-rose-50/50 rounded-2xl p-6 border border-rose-100">
+            <h3 className="text-sm font-medium uppercase tracking-widest text-brand-black mb-4">Write a Review</h3>
+            <div className="mb-4">
+              <label className="block text-xs text-brand-gray mb-2 uppercase tracking-wider">Rating</label>
+              <div className="flex gap-1">
+                {[1,2,3,4,5].map(star => (
+                  <button key={star} type="button" onClick={() => setReviewForm(f => ({...f, rating: star}))}>
+                    <Star className={`w-6 h-6 transition ${star <= reviewForm.rating ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}`} />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="mb-4">
+              <label className="block text-xs text-brand-gray mb-2 uppercase tracking-wider">Your Review</label>
+              <textarea
+                rows={3}
+                value={reviewForm.comment}
+                onChange={e => setReviewForm(f => ({...f, comment: e.target.value}))}
+                placeholder="Share your experience with this product..."
+                className="w-full border border-rose-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-rose transition bg-white"
+              />
+            </div>
+            <button type="submit" disabled={submittingReview} className="bg-brand-black text-white text-xs uppercase tracking-widest px-8 py-3 hover:bg-brand-rose transition disabled:opacity-50">
+              {submittingReview ? 'Submitting...' : 'Submit Review'}
+            </button>
+          </form>
+        )}
+        {!user && (
+          <p className="text-center text-sm text-brand-gray mb-10">
+            <Link to="/login" className="text-brand-rose hover:underline">Log in</Link> to leave a review.
+          </p>
+        )}
+
+        {/* Reviews List */}
+        {reviews.length > 0 ? (
+          <div className="max-w-3xl mx-auto space-y-6">
+            {reviews.map(review => (
+              <div key={review._id} className="bg-white rounded-xl border border-rose-100 p-5">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-brand-black">{review.user?.name || 'Customer'}</span>
+                    <div className="flex">
+                      {[1,2,3,4,5].map(star => (
+                        <Star key={star} className={`w-3.5 h-3.5 ${star <= review.rating ? 'fill-amber-400 text-amber-400' : 'text-gray-200'}`} />
+                      ))}
+                    </div>
+                  </div>
+                  <span className="text-xs text-brand-gray">{new Date(review.createdAt).toLocaleDateString()}</span>
+                </div>
+                <p className="text-sm text-brand-gray font-light">{review.comment}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-sm text-brand-gray">No reviews yet. Be the first to review this product!</p>
+        )}
       </div>
 
       {/* Related Products Feed */}

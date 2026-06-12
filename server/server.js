@@ -78,6 +78,8 @@ app.use('/api/search', require('./routes/searchRoutes'));
 app.use('/api/payments', require('./routes/paymentRoutes'));
 app.use('/api/bespoke-enquiry', require('./routes/bespokeRoutes'));
 app.use('/api/coupons', require('./routes/couponRoutes'));
+app.use('/api/reviews', require('./routes/reviewRoutes'));
+app.use('/api/giftcards', require('./routes/giftCardRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
 // Serve Bespoke reference file uploads statically

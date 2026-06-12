@@ -37,6 +37,7 @@ export default function AdminPage() {
   const [editingProduct, setEditingProduct] = useState(null);
   const [productForm, setProductForm] = useState({ name: '', description: '', price: '', salePrice: '', stock: '10', category: '', tags: '', images: [] });
   const [saving, setSaving] = useState(false);
+  const [productImageUploading, setProductImageUploading] = useState(false);
 
   // Category modal
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -143,6 +144,24 @@ export default function AdminPage() {
     if (!window.confirm('Delete this product?')) return;
     try { await api.delete(`/admin/products/${id}`); fetchProducts(); }
     catch { alert('Failed to delete product.'); }
+  };
+
+  // Upload images for product form
+  const handleProductImageUpload = async (e) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    if (!selectedFiles.length) return;
+    setProductImageUploading(true);
+    const formData = new FormData();
+    selectedFiles.forEach(f => formData.append('images', f));
+    try {
+      const { data } = await api.post('/admin/upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      const newUrls = data.urls || [];
+      setProductForm(f => ({ ...f, images: [...f.images, ...newUrls] }));
+    } catch (err) {
+      alert(err.response?.data?.message || 'Image upload failed.');
+    } finally {
+      setProductImageUploading(false);
+    }
   };
 
   // Order status
@@ -423,7 +442,22 @@ export default function AdminPage() {
               </select>
             </div>
             <Input label="Tags (comma separated)" value={productForm.tags} onChange={v => setProductForm(f => ({ ...f, tags: v }))} />
-            <Input label="Image URLs (comma separated)" value={productForm.images.join(', ')} onChange={v => setProductForm(f => ({ ...f, images: v.split(',').map(s => s.trim()).filter(Boolean) }))} />
+            <div>
+              <label className="mb-1 block text-xs font-medium text-gray-600">Product Images</label>
+              <input type="file" accept="image/png,image/jpeg,image/webp" multiple onChange={handleProductImageUpload} className="block w-full rounded-xl border border-gray-200 px-3 py-2 text-sm mb-2" />
+              {productImageUploading && <p className="text-xs text-gray-500 mb-2">Uploading...</p>}
+              {productForm.images.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {productForm.images.map((url, i) => (
+                    <div key={i} className="relative group">
+                      <img src={url} alt="" className="h-14 w-14 rounded-lg object-cover border border-gray-200" />
+                      <button type="button" onClick={() => setProductForm(f => ({ ...f, images: f.images.filter((_, idx) => idx !== i) }))} className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 text-[10px] leading-none flex items-center justify-center opacity-0 group-hover:opacity-100">×</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <input type="text" placeholder="Or paste image URLs (comma separated)" value={productForm.images.join(', ')} onChange={e => setProductForm(f => ({ ...f, images: e.target.value.split(',').map(s => s.trim()).filter(Boolean) }))} className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm" />
+            </div>
             <div className="flex gap-3 pt-2">
               <button type="submit" disabled={saving} className="rounded-full bg-brand-black px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose disabled:opacity-60">{saving ? 'Saving...' : 'Save Product'}</button>
               <button type="button" onClick={() => setShowProductModal(false)} className="rounded-full border border-gray-300 px-6 py-2.5 text-xs uppercase tracking-[0.15em] text-gray-600 hover:bg-gray-50">Cancel</button>

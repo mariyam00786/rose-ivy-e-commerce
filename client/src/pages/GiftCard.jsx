@@ -2,10 +2,13 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../api/axiosConfig';
 
 export default function GiftCard() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { user } = useAuth();
   const presets = [200, 500, 1000, 2000];
   const [amount, setAmount] = useState(500);
   const [customAmount, setCustomAmount] = useState('');
@@ -13,27 +16,53 @@ export default function GiftCard() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [sender, setSender] = useState('');
+  const [purchasing, setPurchasing] = useState(false);
 
   const finalAmount = useMemo(() => Number(customAmount) || amount, [amount, customAmount]);
 
-  const handleAdd = () => {
+  const handlePurchase = async () => {
     if (!recipient || !email || !sender) {
       toast.error('Please complete the recipient and sender details.');
       return;
     }
-    addToCart({
-      _id: 'gift-card',
-      slug: 'gift-card',
-      name: 'Luxury Gift Card',
-      price: finalAmount,
-      salePrice: null,
-      category: { name: 'Gift Card' },
-      images: ['https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=800&q=80'],
-      description: message || 'A beautiful gift card for your loved one.',
-      stock: 999,
-    }, 1);
-    toast.success('Gift card added to cart.');
-    navigate('/cart');
+    if (finalAmount < 50 || finalAmount > 5000) {
+      toast.error('Gift card amount must be between AED 50 and AED 5000');
+      return;
+    }
+
+    if (user) {
+      // Purchase directly via API
+      setPurchasing(true);
+      try {
+        const { data } = await api.post('/giftcards', {
+          amount: finalAmount,
+          recipientEmail: email,
+          recipientName: recipient,
+          message: message || `A gift from ${sender}`
+        });
+        toast.success(`Gift card purchased! Code: ${data.giftCard.code} sent to ${email} 🎁`);
+        navigate('/');
+      } catch (err) {
+        toast.error(err.response?.data?.message || 'Failed to purchase gift card');
+      } finally {
+        setPurchasing(false);
+      }
+    } else {
+      // Guest: add to cart as a product
+      addToCart({
+        _id: 'gift-card',
+        slug: 'gift-card',
+        name: 'Luxury Gift Card',
+        price: finalAmount,
+        salePrice: null,
+        category: { name: 'Gift Card' },
+        images: ['https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=800&q=80'],
+        description: message || 'A beautiful gift card for your loved one.',
+        stock: 999,
+      }, 1);
+      toast.success('Gift card added to cart. Log in to complete purchase.');
+      navigate('/cart');
+    }
   };
 
   return (
@@ -63,7 +92,9 @@ export default function GiftCard() {
           <label className="block text-xs uppercase tracking-[0.25em] text-brand-gray">Your Name<input value={sender} onChange={(e) => setSender(e.target.value)} className="mt-2 w-full rounded-xl border border-rose-200 px-4 py-3 text-sm" /></label>
           <label className="block text-xs uppercase tracking-[0.25em] text-brand-gray">Personal Message<textarea rows={4} value={message} onChange={(e) => setMessage(e.target.value)} maxLength={200} className="mt-2 w-full rounded-xl border border-rose-200 px-4 py-3 text-sm" /></label>
           <div className="text-xs text-brand-gray">{message.length}/200 characters</div>
-          <button onClick={handleAdd} className="w-full rounded-xl bg-brand-black px-4 py-3 text-xs uppercase tracking-[0.25em] text-white hover:bg-brand-rose">Add to Cart</button>
+          <button onClick={handlePurchase} disabled={purchasing} className="w-full rounded-xl bg-brand-black px-4 py-3 text-xs uppercase tracking-[0.25em] text-white hover:bg-brand-rose disabled:opacity-60">
+            {purchasing ? 'Processing...' : user ? 'Purchase & Send Gift Card' : 'Add to Cart'}
+          </button>
         </div>
       </div>
     </section>

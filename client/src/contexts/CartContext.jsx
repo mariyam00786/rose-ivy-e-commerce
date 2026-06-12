@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import api from '../api/axiosConfig';
 import { toast } from 'react-toastify';
 import { useAuth } from './AuthContext';
@@ -9,7 +9,16 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [discountCode, setDiscountCode] = useState('');
   const [discountAmount, setDiscountAmount] = useState(0);
-  const { user } = useAuth();
+  const { user, registerOnLogin } = useAuth();
+  const syncRegistered = useRef(false);
+
+  // Register cart sync as a post-login callback
+  useEffect(() => {
+    if (registerOnLogin && !syncRegistered.current) {
+      syncRegistered.current = true;
+      registerOnLogin(syncCartOnLogin);
+    }
+  }, [registerOnLogin]);
 
   // Load guest cart from localStorage on boot
   useEffect(() => {
@@ -164,40 +173,48 @@ export const CartProvider = ({ children }) => {
   const applyDiscount = async (code) => {
     if (!code || code.trim() === '') return;
     
-    // Simulate/verify coupon locally for guests, or fetch from backend for logged in users
     const cleanCode = code.toUpperCase().trim();
     
-    // Simple verification
-    let discount = 0;
-    if (cleanCode === 'WELCOME10') {
-      if (cartTotal >= 100) {
-        discount = Math.round(cartTotal * 0.1);
-        setDiscountCode('WELCOME10');
-        setDiscountAmount(discount);
-        toast.success('10% Welcome discount applied!');
-      } else {
-        toast.warning('Min order of AED 100 required for WELCOME10');
+    try {
+      const { data } = await api.post('/coupons/validate', { code: cleanCode, cartTotal });
+      if (data.valid) {
+        setDiscountCode(data.code);
+        setDiscountAmount(data.discount);
+        toast.success(`Coupon applied! You save AED ${data.discount}`);
       }
-    } else if (cleanCode === 'ROSE20') {
-      if (cartTotal >= 300) {
-        discount = Math.round(cartTotal * 0.2);
-        setDiscountCode('ROSE20');
-        setDiscountAmount(discount);
-        toast.success('20% Rose discount applied!');
+    } catch (err) {
+      // Fallback to hardcoded coupons for guest users or if backend unavailable
+      let discount = 0;
+      if (cleanCode === 'WELCOME10') {
+        if (cartTotal >= 100) {
+          discount = Math.round(cartTotal * 0.1);
+          setDiscountCode('WELCOME10');
+          setDiscountAmount(discount);
+          toast.success('10% Welcome discount applied!');
+        } else {
+          toast.warning('Min order of AED 100 required for WELCOME10');
+        }
+      } else if (cleanCode === 'ROSE20') {
+        if (cartTotal >= 300) {
+          discount = Math.round(cartTotal * 0.2);
+          setDiscountCode('ROSE20');
+          setDiscountAmount(discount);
+          toast.success('20% Rose discount applied!');
+        } else {
+          toast.warning('Min order of AED 300 required for ROSE20');
+        }
+      } else if (cleanCode === 'DXB50') {
+        if (cartTotal >= 200) {
+          discount = 50;
+          setDiscountCode('DXB50');
+          setDiscountAmount(discount);
+          toast.success('AED 50 discount applied!');
+        } else {
+          toast.warning('Min order of AED 200 required for DXB50');
+        }
       } else {
-        toast.warning('Min order of AED 300 required for ROSE20');
+        toast.error(err.response?.data?.message || 'Invalid coupon code');
       }
-    } else if (cleanCode === 'DXB50') {
-      if (cartTotal >= 200) {
-        discount = 50;
-        setDiscountCode('DXB50');
-        setDiscountAmount(discount);
-        toast.success('AED 50 discount applied!');
-      } else {
-        toast.warning('Min order of AED 200 required for DXB50');
-      }
-    } else {
-      toast.error('Invalid coupon code');
     }
   };
 
