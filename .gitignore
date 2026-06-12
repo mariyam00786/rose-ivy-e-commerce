@@ -7,3 +7,6 @@ server/mongodb_data/
 server/uploads/
 npm-debug.log
 yarn-error.log
+
+.vercel
+.env*
