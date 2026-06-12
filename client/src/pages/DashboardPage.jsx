@@ -24,7 +24,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (active === 'orders') {
-      api.get('/orders').then(({ data }) => setOrders(data)).catch(() => setOrders([]));
+      api.get('/orders/my').then(({ data }) => setOrders(data)).catch(() => setOrders([]));
     }
   }, [active]);
 

@@ -19,7 +19,7 @@ export default function OrdersPage() {
   const { formatPrice } = useCurrency();
 
   useEffect(() => {
-    api.get('/orders').then(({ data }) => setOrders(data)).catch(() => setOrders([])).finally(() => setLoading(false));
+    api.get('/orders/my').then(({ data }) => setOrders(data)).catch(() => setOrders([])).finally(() => setLoading(false));
   }, []);
 
   return (
