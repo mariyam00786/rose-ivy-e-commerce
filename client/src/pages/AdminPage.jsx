@@ -219,13 +219,13 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="flex min-h-[80vh]">
-      {/* Sidebar */}
-      <aside className="w-56 shrink-0 border-r border-rose-100 bg-gray-50 p-4">
-        <h2 className="mb-6 text-lg font-semibold tracking-wide text-brand-black">Admin Panel</h2>
-        <nav className="space-y-1">
+    <div className="flex flex-col md:flex-row min-h-[80vh]">
+      {/* Sidebar - horizontal scroll on mobile, vertical on desktop */}
+      <aside className="w-full md:w-56 shrink-0 border-b md:border-b-0 md:border-r border-rose-100 bg-gray-50 p-3 md:p-4 overflow-x-auto md:overflow-x-visible">
+        <h2 className="hidden md:block mb-6 text-lg font-semibold tracking-wide text-brand-black">Admin Panel</h2>
+        <nav className="flex md:flex-col gap-1 md:space-y-1">
           {NAV_ITEMS.map(n => (
-            <button key={n.id} onClick={() => setTab(n.id)} className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition ${tab === n.id ? 'bg-rose-100 font-semibold text-brand-black' : 'text-gray-600 hover:bg-rose-50'}`}>
+            <button key={n.id} onClick={() => setTab(n.id)} className={`flex items-center gap-2 md:gap-3 whitespace-nowrap rounded-xl px-3 py-2 md:py-2.5 text-left text-xs md:text-sm transition ${tab === n.id ? 'bg-rose-100 font-semibold text-brand-black' : 'text-gray-600 hover:bg-rose-50'} ${tab === n.id ? '' : ''} md:w-full`}>
               <span>{n.icon}</span><span>{n.label}</span>
             </button>
           ))}
@@ -233,7 +233,7 @@ export default function AdminPage() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-6 md:p-8">
+      <main className="flex-1 p-4 md:p-6 lg:p-8 min-w-0">
         {/* ─── OVERVIEW ─── */}
         {tab === 'overview' && (
           <div>
@@ -430,7 +430,7 @@ export default function AdminPage() {
               <label className="mb-1 block text-xs font-medium text-gray-600">Description</label>
               <textarea rows={3} required value={productForm.description} onChange={e => setProductForm(f => ({ ...f, description: e.target.value }))} className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm" />
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Input label="Price" type="number" value={productForm.price} onChange={v => setProductForm(f => ({ ...f, price: v }))} required />
               <Input label="Sale Price" type="number" value={productForm.salePrice} onChange={v => setProductForm(f => ({ ...f, salePrice: v }))} />
               <Input label="Stock" type="number" value={productForm.stock} onChange={v => setProductForm(f => ({ ...f, stock: v }))} required />
@@ -500,8 +500,8 @@ function StatCard({ label, value, icon }) {
 
 function Modal({ children, onClose, title }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-6 shadow-xl" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4" onClick={onClose}>
+      <div className="max-h-[90vh] w-full sm:max-w-lg overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-white p-5 sm:p-6 shadow-xl" onClick={e => e.stopPropagation()}>
         <h2 className="mb-4 text-lg font-semibold">{title}</h2>
         {children}
       </div>
