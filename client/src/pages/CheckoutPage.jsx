@@ -80,15 +80,16 @@ export default function CheckoutPage() {
 
       const { data } = await api.post('/orders', {
         shippingAddress: mappedShipping,
-        paymentMethod,
+        paymentMethod: paymentMethod === 'card' ? 'stripe' : paymentMethod,
         total: grandTotal,
         deliveryFee,
         discountAmount,
         discountCode,
       });
+      const createdOrder = data.order || data;
       await clearCart();
       toast.success('Order placed successfully! 🌸');
-      navigate(`/order-success/${data._id}`, { state: { order: data } });
+      navigate(`/order-success/${createdOrder._id}`, { state: { order: createdOrder } });
     } catch (err) {
       toast.error(err.response?.data?.message || 'Could not place order. Please try again.');
     } finally {
