@@ -117,7 +117,7 @@ export default function ProductCard({ product, index = 0 }) {
       >
         {/* Image Area with hover crossfade */}
         <div className="relative aspect-[4/5] bg-rose-50 overflow-hidden w-full">
-          <Link to={`/product/${product.slug}`} className="block w-full h-full">
+          <Link to={`/products/${product.slug}`} className="block w-full h-full">
             <img
               src={getProductImage(product)}
               alt={product.name}
@@ -197,7 +197,7 @@ export default function ProductCard({ product, index = 0 }) {
           </div>
 
           <h3 className="mb-2 flex-1 font-serif text-lg text-brand-black leading-snug">
-            <Link to={`/product/${product.slug}`} className="hover:text-brand-rose transition">
+            <Link to={`/products/${product.slug}`} className="hover:text-brand-rose transition">
               {product.name}
             </Link>
           </h3>

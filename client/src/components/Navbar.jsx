@@ -21,7 +21,7 @@ const NAV_LINKS = [
       { label: 'Gifts', to: '/products?category=gifts' },
     ],
   },
-  { label: 'Sale', to: '/products?sale=true' },
+  { label: 'Sale', to: '/products?onSale=true' },
   { label: 'Bespoke', to: '/bespoke' },
   { label: 'Gift Card', to: '/products?category=gift-cards' },
   { label: 'What Are Preserved Flowers?', to: '/about' },

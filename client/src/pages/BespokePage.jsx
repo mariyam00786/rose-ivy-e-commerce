@@ -11,7 +11,7 @@ const STEPS = [
 ];
 
 export default function BespokePage() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', eventType: '', budget: '', description: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', occasion: '', budgetRange: '', message: '' });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -19,7 +19,7 @@ export default function BespokePage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.post('/bespoke', form);
+      await api.post('/bespoke-enquiry', form);
       setSubmitted(true);
       toast.success('Enquiry submitted! Our design team will contact you within 24 hours. 🌸');
     } catch {
@@ -105,14 +105,14 @@ export default function BespokePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label style={labelStyle}>Event / Occasion</label>
-                  <select value={form.eventType} onChange={e => setForm({...form, eventType: e.target.value})} style={inputStyle} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'}>
+                  <select value={form.occasion} onChange={e => setForm({...form, occasion: e.target.value})} style={inputStyle} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'}>
                     <option value="">Select type</option>
                     <option>Wedding</option><option>Corporate</option><option>Home Interior</option><option>Gift</option><option>Event Decoration</option><option>Other</option>
                   </select>
                 </div>
                 <div>
                   <label style={labelStyle}>Budget Range (AED)</label>
-                  <select value={form.budget} onChange={e => setForm({...form, budget: e.target.value})} style={inputStyle} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'}>
+                  <select value={form.budgetRange} onChange={e => setForm({...form, budgetRange: e.target.value})} style={inputStyle} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'}>
                     <option value="">Select budget</option>
                     <option>Under AED 500</option><option>AED 500 – 1,000</option><option>AED 1,000 – 3,000</option><option>AED 3,000 – 5,000</option><option>AED 5,000+</option>
                   </select>
@@ -120,7 +120,7 @@ export default function BespokePage() {
               </div>
               <div>
                 <label style={labelStyle}>Describe Your Vision *</label>
-                <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} placeholder="Share your ideas — colours, flowers, space dimensions, any reference images or specific requests..." rows={5} style={{...inputStyle, resize: 'vertical'}} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'} required />
+                <textarea value={form.message} onChange={e => setForm({...form, message: e.target.value})} placeholder="Share your ideas — colours, flowers, space dimensions, any reference images or specific requests..." rows={5} style={{...inputStyle, resize: 'vertical'}} onFocus={e => e.currentTarget.style.borderColor = '#D1AFA1'} onBlur={e => e.currentTarget.style.borderColor = '#e8e0db'} required />
               </div>
               <button type="button" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '13px 20px', border: '1px dashed #D1AFA1', background: 'transparent', color: '#888', fontFamily: 'Inter', fontSize: 12, letterSpacing: '0.08em', cursor: 'pointer' }}>
                 <Upload size={16} color="#D1AFA1" /> Attach Reference Images (optional)

@@ -118,7 +118,8 @@ exports.syncCart = async (req, res, next) => {
     }
 
     for (const guestItem of items) {
-      const pId = guestItem.productId || guestItem.product;
+      const rawId = guestItem.productId || guestItem.product;
+      const pId = rawId?._id || rawId?.id || rawId;
       if (!pId) continue;
       
       const product = await Product.findById(pId);
