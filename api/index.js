@@ -1,16 +1,27 @@
 const mongoose = require('mongoose');
-const app = require('../server/server.js');
+
+// Ensure DB connected before loading app (which triggers connectDB at module load)
+let appPromise;
+
+const getApp = async () => {
+  if (!appPromise) {
+    appPromise = (async () => {
+      if (mongoose.connection.readyState !== 1) {
+        await mongoose.connect(process.env.MONGO_URI, {
+          serverSelectionTimeoutMS: 10000
+        });
+      }
+      return require('../server/server.js');
+    })();
+  }
+  return appPromise;
+};
 
 module.exports = async (req, res) => {
-  // Ensure DB is connected before handling any request
-  if (mongoose.connection.readyState !== 1) {
-    try {
-      await mongoose.connect(process.env.MONGO_URI, {
-        serverSelectionTimeoutMS: 5000
-      });
-    } catch (err) {
-      console.error('DB connection error in serverless:', err.message);
-    }
+  try {
+    const app = await getApp();
+    return app(req, res);
+  } catch (err) {
+    res.status(500).json({ message: 'Server initialization failed', error: err.message });
   }
-  return app(req, res);
 };
