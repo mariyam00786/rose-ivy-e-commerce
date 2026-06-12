@@ -81,7 +81,8 @@ app.use('/api/coupons', require('./routes/couponRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
 // Serve Bespoke reference file uploads statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+const uploadsPath = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(uploadsPath));
 
 // Production bundle serving
 if (process.env.NODE_ENV === 'production') {

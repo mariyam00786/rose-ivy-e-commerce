@@ -20,7 +20,7 @@ const admin = require('../middleware/adminMiddleware');
 const seedData = require('../seed');
 const router = express.Router();
 
-const uploadDir = path.join(__dirname, '../uploads/admin');
+const uploadDir = process.env.VERCEL ? '/tmp/uploads/admin' : path.join(__dirname, '../uploads/admin');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }

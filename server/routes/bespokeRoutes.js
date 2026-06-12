@@ -5,8 +5,8 @@ const fs = require('fs');
 const { submitBespokeEnquiry } = require('../controllers/bespokeController');
 const router = express.Router();
 
-// Ensure upload directory exists
-const uploadDir = path.join(__dirname, '../uploads');
+// Ensure upload directory exists (use /tmp on Vercel since filesystem is read-only)
+const uploadDir = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
