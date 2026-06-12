@@ -58,3 +58,28 @@ export function getProductImage(product) {
   const name = product.name || product.productId?.name || '';
   return getFallbackImage(name);
 }
+
+export function getCategoryImage(category) {
+  if (!category) return FALLBACK_IMAGES[0];
+  
+  // If the category has a non-placeholder image, use it
+  if (category.image && !category.image.includes('unsplash.com') && !category.image.includes('pexels.com')) {
+    return category.image;
+  }
+  
+  // Map category names to appropriate flower images
+  const name = (category.name || category.slug || '').toLowerCase();
+  
+  if (name.includes('box') || name.includes('flower box')) return FALLBACK_IMAGES[0];
+  if (name.includes('signature')) return FALLBACK_IMAGES[1];
+  if (name.includes('vase') || name.includes('bouquet')) return FALLBACK_IMAGES[2];
+  if (name.includes('statement') || name.includes('interior')) return FALLBACK_IMAGES[5];
+  if (name.includes('wedding')) return FALLBACK_IMAGES[3];
+  if (name.includes('seasonal') || name.includes('summer')) return FALLBACK_IMAGES[4];
+  if (name.includes('gift')) return FALLBACK_IMAGES[0];
+  if (name.includes('yacht') || name.includes('aviation')) return FALLBACK_IMAGES[5];
+  if (name.includes('b2b') || name.includes('solution')) return FALLBACK_IMAGES[2];
+  if (name.includes('bespoke')) return FALLBACK_IMAGES[1];
+  
+  return getFallbackImage(name);
+}

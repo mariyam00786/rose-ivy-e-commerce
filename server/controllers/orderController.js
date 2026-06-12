@@ -35,12 +35,12 @@ exports.createOrder = async (req, res, next) => {
       };
     });
 
+    // Calculate total from cart items if not provided
+    const calculatedTotal = total || orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0) + deliveryFee - discountAmount;
+
     // Determine initial payment status
     let paymentStatus = 'pending';
     if (paymentMethod === 'stripe') {
-      // If Stripe, client will verify payment, but we set to pending until payment intent is completed.
-      // Or if payment intent is already succeeded, we set to paid.
-      // Let's default to pending unless payment is verified.
       paymentStatus = 'pending';
     }
 
@@ -50,11 +50,11 @@ exports.createOrder = async (req, res, next) => {
       shippingAddress,
       paymentMethod,
       paymentStatus,
-      total,
+      total: calculatedTotal,
       deliveryFee,
       discountCode,
       discountAmount,
-      status: 'pending' // Initial status is pending
+      status: 'pending'
     });
 
     // Clear user cart
