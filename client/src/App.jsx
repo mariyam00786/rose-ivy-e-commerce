@@ -9,6 +9,7 @@ import { CurrencyProvider } from './contexts/CurrencyContext';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import MobileBottomNav from './components/MobileBottomNav';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import WhatsAppButton from './components/WhatsAppButton';
@@ -77,7 +78,7 @@ function AppLayout() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
-      <main style={{ flex: 1, paddingTop: isHeroPage ? 0 : 150 }}>
+      <main style={{ flex: 1, paddingTop: isHeroPage ? 0 : 120 }} className="main-content">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<ProductsPage />} />
@@ -105,6 +106,7 @@ function AppLayout() {
         </Routes>
       </main>
       <Footer />
+      <MobileBottomNav />
       <WhatsAppButton />
       <CookieConsent />
     </div>

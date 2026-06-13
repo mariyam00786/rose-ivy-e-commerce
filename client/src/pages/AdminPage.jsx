@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axiosConfig';
 import { getProductImage, getCategoryImage } from '../utils/imageUtils';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const fmt = (v) => new Intl.NumberFormat('en-AE', { style: 'currency', currency: 'AED', minimumFractionDigits: 0 }).format(v || 0);
 
@@ -49,6 +50,9 @@ export default function AdminPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadedUrls, setUploadedUrls] = useState([]);
   const [uploadMsg, setUploadMsg] = useState('');
+
+  // Confirm dialog state
+  const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', message: '', onConfirm: null });
 
   useEffect(() => {
     if (tab === 'overview') fetchStats();
@@ -140,10 +144,17 @@ export default function AdminPage() {
     } finally { setSaving(false); }
   };
 
-  const handleDeleteProduct = async (id) => {
-    if (!window.confirm('Delete this product?')) return;
-    try { await api.delete(`/admin/products/${id}`); fetchProducts(); }
-    catch { alert('Failed to delete product.'); }
+  const handleDeleteProduct = (id) => {
+    setConfirmDialog({
+      open: true,
+      title: 'Delete Product',
+      message: 'Are you sure you want to delete this product? This action cannot be undone.',
+      onConfirm: async () => {
+        try { await api.delete(`/admin/products/${id}`); fetchProducts(); }
+        catch { alert('Failed to delete product.'); }
+        finally { setConfirmDialog(d => ({ ...d, open: false })); }
+      },
+    });
   };
 
   // Upload images for product form
@@ -196,10 +207,17 @@ export default function AdminPage() {
     } catch (err) { alert(err.response?.data?.message || 'Failed to save category'); }
   };
 
-  const handleDeleteCategory = async (id) => {
-    if (!window.confirm('Delete this category?')) return;
-    try { await api.delete(`/admin/categories/${id}`); fetchCategories(); }
-    catch { alert('Failed to delete category.'); }
+  const handleDeleteCategory = (id) => {
+    setConfirmDialog({
+      open: true,
+      title: 'Delete Category',
+      message: 'Are you sure you want to delete this category? All products under it will be unlinked.',
+      onConfirm: async () => {
+        try { await api.delete(`/admin/categories/${id}`); fetchCategories(); }
+        catch { alert('Failed to delete category.'); }
+        finally { setConfirmDialog(d => ({ ...d, open: false })); }
+      },
+    });
   };
 
   // Upload
@@ -257,36 +275,65 @@ export default function AdminPage() {
               <button onClick={openNewProduct} className="rounded-full bg-brand-black px-5 py-2.5 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose">+ New Product</button>
             </div>
             {loading ? <p className="mt-6 text-gray-500">Loading...</p> : (
-              <div className="mt-6 overflow-x-auto rounded-2xl border border-rose-100 bg-white shadow-sm">
-                <table className="w-full text-sm">
-                  <thead className="border-b border-rose-100 bg-rose-50/50">
-                    <tr>
-                      <th className="px-4 py-3 text-left font-medium">Image</th>
-                      <th className="px-4 py-3 text-left font-medium">Name</th>
-                      <th className="px-4 py-3 text-left font-medium">Category</th>
-                      <th className="px-4 py-3 text-left font-medium">Price</th>
-                      <th className="px-4 py-3 text-left font-medium">Stock</th>
-                      <th className="px-4 py-3 text-left font-medium">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.map(p => (
-                      <tr key={p._id} className="border-b border-rose-50 hover:bg-rose-50/30">
-                        <td className="px-4 py-3"><img src={getProductImage(p)} alt="" className="h-10 w-10 rounded-lg object-cover" /></td>
-                        <td className="px-4 py-3 font-medium">{p.name}</td>
-                        <td className="px-4 py-3 text-gray-600">{p.category?.name || '—'}</td>
-                        <td className="px-4 py-3">{fmt(p.price)}{p.salePrice && <span className="ml-1 text-xs text-green-600">{fmt(p.salePrice)}</span>}</td>
-                        <td className="px-4 py-3">{p.stock}</td>
-                        <td className="px-4 py-3">
-                          <button onClick={() => openEditProduct(p)} className="mr-2 text-blue-600 hover:underline">Edit</button>
-                          <button onClick={() => handleDeleteProduct(p._id)} className="text-red-500 hover:underline">Delete</button>
-                        </td>
+              <>
+                {/* Desktop table */}
+                <div className="mt-6 hidden md:block overflow-x-auto rounded-2xl border border-rose-100 bg-white shadow-sm">
+                  <table className="w-full text-sm">
+                    <thead className="border-b border-rose-100 bg-rose-50/50">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-medium">Image</th>
+                        <th className="px-4 py-3 text-left font-medium">Name</th>
+                        <th className="px-4 py-3 text-left font-medium">Category</th>
+                        <th className="px-4 py-3 text-left font-medium">Price</th>
+                        <th className="px-4 py-3 text-left font-medium">Stock</th>
+                        <th className="px-4 py-3 text-left font-medium">Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {products.length === 0 && <p className="p-6 text-center text-gray-400">No products found.</p>}
-              </div>
+                    </thead>
+                    <tbody>
+                      {products.map(p => (
+                        <tr key={p._id} className="border-b border-rose-50 hover:bg-rose-50/30">
+                          <td className="px-4 py-3"><img src={getProductImage(p)} alt="" className="h-10 w-10 rounded-lg object-cover" /></td>
+                          <td className="px-4 py-3 font-medium">{p.name}</td>
+                          <td className="px-4 py-3 text-gray-600">{p.category?.name || '—'}</td>
+                          <td className="px-4 py-3">{fmt(p.price)}{p.salePrice && <span className="ml-1 text-xs text-green-600">{fmt(p.salePrice)}</span>}</td>
+                          <td className="px-4 py-3">{p.stock}</td>
+                          <td className="px-4 py-3">
+                            <button onClick={() => openEditProduct(p)} className="mr-2 text-blue-600 hover:underline">Edit</button>
+                            <button onClick={() => handleDeleteProduct(p._id)} className="text-red-500 hover:underline">Delete</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {products.length === 0 && <p className="p-6 text-center text-gray-400">No products found.</p>}
+                </div>
+                {/* Mobile cards */}
+                <div className="mt-6 md:hidden space-y-3">
+                  {products.map(p => (
+                    <div key={p._id} className="rounded-2xl border border-rose-100 bg-white p-4 shadow-sm">
+                      <div className="flex items-center gap-3 mb-3">
+                        <img src={getProductImage(p)} alt="" className="h-12 w-12 rounded-xl object-cover" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">{p.name}</p>
+                          <p className="text-xs text-gray-500">{p.category?.name || '—'}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-semibold">{fmt(p.price)}</span>
+                          {p.salePrice && <span className="text-xs text-green-600">{fmt(p.salePrice)}</span>}
+                          <span className="text-xs text-gray-400">Stock: {p.stock}</span>
+                        </div>
+                        <div className="flex gap-3">
+                          <button onClick={() => openEditProduct(p)} className="text-xs text-blue-600 font-medium">Edit</button>
+                          <button onClick={() => handleDeleteProduct(p._id)} className="text-xs text-red-500 font-medium">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {products.length === 0 && <p className="p-6 text-center text-gray-400">No products found.</p>}
+                </div>
+              </>
             )}
           </div>
         )}
@@ -296,43 +343,73 @@ export default function AdminPage() {
           <div>
             <h1 className="text-2xl font-semibold tracking-wide">Orders</h1>
             {loading ? <p className="mt-6 text-gray-500">Loading...</p> : (
-              <div className="mt-6 overflow-x-auto rounded-2xl border border-rose-100 bg-white shadow-sm">
-                <table className="w-full text-sm">
-                  <thead className="border-b border-rose-100 bg-rose-50/50">
-                    <tr>
-                      <th className="px-4 py-3 text-left font-medium">Order ID</th>
-                      <th className="px-4 py-3 text-left font-medium">Customer</th>
-                      <th className="px-4 py-3 text-left font-medium">Date</th>
-                      <th className="px-4 py-3 text-left font-medium">Total</th>
-                      <th className="px-4 py-3 text-left font-medium">Payment</th>
-                      <th className="px-4 py-3 text-left font-medium">Status</th>
-                      <th className="px-4 py-3 text-left font-medium">Update</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orders.map(o => (
-                      <tr key={o._id} className="border-b border-rose-50 hover:bg-rose-50/30">
-                        <td className="px-4 py-3 font-mono text-xs">#{o._id.slice(-8).toUpperCase()}</td>
-                        <td className="px-4 py-3">{o.user?.name || o.userId?.name || '—'}</td>
-                        <td className="px-4 py-3 text-gray-600">{new Date(o.createdAt).toLocaleDateString()}</td>
-                        <td className="px-4 py-3 font-medium">{fmt(o.total || o.totalPrice)}</td>
-                        <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_COLORS[o.paymentStatus] || 'bg-gray-100 text-gray-600'}`}>{o.paymentStatus}</span></td>
-                        <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${STATUS_COLORS[o.status] || 'bg-gray-100 text-gray-600'}`}>{o.status}</span></td>
-                        <td className="px-4 py-3">
-                          <select value={o.status} onChange={e => handleOrderStatus(o._id, e.target.value)} className="rounded-lg border border-gray-200 px-2 py-1 text-xs">
-                            <option value="pending">Pending</option>
-                            <option value="processing">Processing</option>
-                            <option value="shipped">Shipped</option>
-                            <option value="delivered">Delivered</option>
-                            <option value="cancelled">Cancelled</option>
-                          </select>
-                        </td>
+              <>
+                {/* Desktop table */}
+                <div className="mt-6 hidden md:block overflow-x-auto rounded-2xl border border-rose-100 bg-white shadow-sm">
+                  <table className="w-full text-sm">
+                    <thead className="border-b border-rose-100 bg-rose-50/50">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-medium">Order ID</th>
+                        <th className="px-4 py-3 text-left font-medium">Customer</th>
+                        <th className="px-4 py-3 text-left font-medium">Date</th>
+                        <th className="px-4 py-3 text-left font-medium">Total</th>
+                        <th className="px-4 py-3 text-left font-medium">Payment</th>
+                        <th className="px-4 py-3 text-left font-medium">Status</th>
+                        <th className="px-4 py-3 text-left font-medium">Update</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {orders.length === 0 && <p className="p-6 text-center text-gray-400">No orders yet.</p>}
-              </div>
+                    </thead>
+                    <tbody>
+                      {orders.map(o => (
+                        <tr key={o._id} className="border-b border-rose-50 hover:bg-rose-50/30">
+                          <td className="px-4 py-3 font-mono text-xs">#{o._id.slice(-8).toUpperCase()}</td>
+                          <td className="px-4 py-3">{o.user?.name || o.userId?.name || '—'}</td>
+                          <td className="px-4 py-3 text-gray-600">{new Date(o.createdAt).toLocaleDateString()}</td>
+                          <td className="px-4 py-3 font-medium">{fmt(o.total || o.totalPrice)}</td>
+                          <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STATUS_COLORS[o.paymentStatus] || 'bg-gray-100 text-gray-600'}`}>{o.paymentStatus}</span></td>
+                          <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-semibold capitalize ${STATUS_COLORS[o.status] || 'bg-gray-100 text-gray-600'}`}>{o.status}</span></td>
+                          <td className="px-4 py-3">
+                            <select value={o.status} onChange={e => handleOrderStatus(o._id, e.target.value)} className="rounded-lg border border-gray-200 px-2 py-1 text-xs">
+                              <option value="pending">Pending</option>
+                              <option value="processing">Processing</option>
+                              <option value="shipped">Shipped</option>
+                              <option value="delivered">Delivered</option>
+                              <option value="cancelled">Cancelled</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {orders.length === 0 && <p className="p-6 text-center text-gray-400">No orders yet.</p>}
+                </div>
+                {/* Mobile cards */}
+                <div className="mt-6 md:hidden space-y-3">
+                  {orders.map(o => (
+                    <div key={o._id} className="rounded-2xl border border-rose-100 bg-white p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-mono text-xs font-semibold">#{o._id.slice(-8).toUpperCase()}</span>
+                        <span className="text-xs text-gray-500">{new Date(o.createdAt).toLocaleDateString()}</span>
+                      </div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm">{o.user?.name || o.userId?.name || '—'}</span>
+                        <span className="text-sm font-semibold">{fmt(o.total || o.totalPrice)}</span>
+                      </div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${STATUS_COLORS[o.paymentStatus] || 'bg-gray-100 text-gray-600'}`}>{o.paymentStatus}</span>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold capitalize ${STATUS_COLORS[o.status] || 'bg-gray-100 text-gray-600'}`}>{o.status}</span>
+                      </div>
+                      <select value={o.status} onChange={e => handleOrderStatus(o._id, e.target.value)} className="w-full rounded-lg border border-gray-200 px-3 py-2 text-xs">
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
+                    </div>
+                  ))}
+                  {orders.length === 0 && <p className="p-6 text-center text-gray-400">No orders yet.</p>}
+                </div>
+              </>
             )}
           </div>
         )}
@@ -370,29 +447,46 @@ export default function AdminPage() {
           <div>
             <h1 className="text-2xl font-semibold tracking-wide">Customers</h1>
             {loading ? <p className="mt-6 text-gray-500">Loading...</p> : (
-              <div className="mt-6 overflow-x-auto rounded-2xl border border-rose-100 bg-white shadow-sm">
-                <table className="w-full text-sm">
-                  <thead className="border-b border-rose-100 bg-rose-50/50">
-                    <tr>
-                      <th className="px-4 py-3 text-left font-medium">Name</th>
-                      <th className="px-4 py-3 text-left font-medium">Email</th>
-                      <th className="px-4 py-3 text-left font-medium">Role</th>
-                      <th className="px-4 py-3 text-left font-medium">Joined</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map(u => (
-                      <tr key={u._id} className="border-b border-rose-50 hover:bg-rose-50/30">
-                        <td className="px-4 py-3 font-medium">{u.name}</td>
-                        <td className="px-4 py-3 text-gray-600">{u.email}</td>
-                        <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-600'}`}>{u.role}</span></td>
-                        <td className="px-4 py-3 text-gray-500">{new Date(u.createdAt).toLocaleDateString()}</td>
+              <>
+                {/* Desktop table */}
+                <div className="mt-6 hidden md:block overflow-x-auto rounded-2xl border border-rose-100 bg-white shadow-sm">
+                  <table className="w-full text-sm">
+                    <thead className="border-b border-rose-100 bg-rose-50/50">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-medium">Name</th>
+                        <th className="px-4 py-3 text-left font-medium">Email</th>
+                        <th className="px-4 py-3 text-left font-medium">Role</th>
+                        <th className="px-4 py-3 text-left font-medium">Joined</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {users.length === 0 && <p className="p-6 text-center text-gray-400">No users found.</p>}
-              </div>
+                    </thead>
+                    <tbody>
+                      {users.map(u => (
+                        <tr key={u._id} className="border-b border-rose-50 hover:bg-rose-50/30">
+                          <td className="px-4 py-3 font-medium">{u.name}</td>
+                          <td className="px-4 py-3 text-gray-600">{u.email}</td>
+                          <td className="px-4 py-3"><span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-600'}`}>{u.role}</span></td>
+                          <td className="px-4 py-3 text-gray-500">{new Date(u.createdAt).toLocaleDateString()}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {users.length === 0 && <p className="p-6 text-center text-gray-400">No users found.</p>}
+                </div>
+                {/* Mobile cards */}
+                <div className="mt-6 md:hidden space-y-3">
+                  {users.map(u => (
+                    <div key={u._id} className="rounded-2xl border border-rose-100 bg-white p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm font-medium">{u.name}</span>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-600'}`}>{u.role}</span>
+                      </div>
+                      <p className="text-xs text-gray-500">{u.email}</p>
+                      <p className="text-[10px] text-gray-400 mt-1">Joined {new Date(u.createdAt).toLocaleDateString()}</p>
+                    </div>
+                  ))}
+                  {users.length === 0 && <p className="p-6 text-center text-gray-400">No users found.</p>}
+                </div>
+              </>
             )}
           </div>
         )}
@@ -479,6 +573,17 @@ export default function AdminPage() {
           </form>
         </Modal>
       )}
+
+      {/* Confirm Dialog */}
+      <ConfirmDialog
+        open={confirmDialog.open}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        confirmLabel="Delete"
+        onConfirm={confirmDialog.onConfirm}
+        onCancel={() => setConfirmDialog(d => ({ ...d, open: false }))}
+        variant="danger"
+      />
     </div>
   );
 }
