@@ -5,7 +5,7 @@ import { getProductImage, getCategoryImage } from '../utils/imageUtils';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-toastify';
-import { FiLogOut, FiHome, FiPackage, FiShoppingBag, FiUsers, FiMoreHorizontal } from 'react-icons/fi';
+import { FiLogOut, FiHome, FiPackage, FiShoppingBag, FiUsers, FiMoreHorizontal, FiX, FiGrid, FiEdit3, FiTag, FiCamera } from 'react-icons/fi';
 import { Badge, Modal, StatCard, Skeleton } from '../components/ui';
 
 const fmt = (v) => new Intl.NumberFormat('en-AE', { style: 'currency', currency: 'AED', minimumFractionDigits: 0 }).format(v || 0);
@@ -84,6 +84,7 @@ export default function AdminPage() {
 
   // Confirm dialog state
   const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', message: '', onConfirm: null });
+  const [moreDrawerOpen, setMoreDrawerOpen] = useState(false);
 
   useEffect(() => {
     if (tab === 'overview') fetchStats();
@@ -386,26 +387,34 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-[#f9f5f3]">
       {/* Fixed Top Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-5 md:px-8 shadow-sm">
+      <nav className="fixed top-0 left-0 right-0 z-50 flex h-14 md:h-16 items-center justify-between border-b border-gray-200 bg-white px-4 md:px-8 shadow-sm">
         {/* Left - Logo */}
-        <h1 className="text-lg font-semibold tracking-widest text-brand-black uppercase">Rose Ivy</h1>
+        <h1 className="text-sm md:text-lg font-semibold tracking-widest text-brand-black uppercase">Rose Ivy</h1>
         {/* Center - Dashboard */}
-        <span className="absolute left-1/2 -translate-x-1/2 text-sm font-medium tracking-wide text-gray-700 uppercase">Dashboard</span>
+        <span className="absolute left-1/2 -translate-x-1/2 text-[10px] md:text-sm font-medium tracking-wide text-gray-500 md:text-gray-700 uppercase">Dashboard</span>
         {/* Right - Logout */}
+        {/* Desktop: full button */}
         <button
           onClick={() => { logout(); navigate('/'); }}
-          className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow hover:bg-red-600 transition"
+          className="hidden md:flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow hover:bg-red-600 transition"
         >
           <FiLogOut size={14} /><span>Logout</span>
+        </button>
+        {/* Mobile: icon-only */}
+        <button
+          onClick={() => { logout(); navigate('/'); }}
+          className="md:hidden flex items-center justify-center w-8 h-8 rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition"
+        >
+          <FiLogOut size={14} />
         </button>
       </nav>
 
       {/* Main Content Below Navbar */}
-      <div className="pt-20 px-4 md:px-8 pb-24 md:pb-8">
-        {/* Bordered Container */}
-        <div className="rounded-2xl border border-gray-200 bg-white min-h-[calc(100vh-7rem)] shadow-sm">
-          {/* Top Bar inside container - Nav tabs + Add button */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-gray-100 px-5 py-4">
+      <div className="pt-16 md:pt-20 px-4 md:px-8 pb-24 md:pb-8">
+        {/* Bordered Container - desktop only has border */}
+        <div className="md:rounded-2xl md:border md:border-gray-200 md:bg-white md:min-h-[calc(100vh-7rem)] md:shadow-sm">
+          {/* Top Bar inside container - Nav tabs + Add button (DESKTOP ONLY) */}
+          <div className="hidden md:flex md:flex-row md:items-center justify-between gap-3 border-b border-gray-100 px-5 py-4">
             {/* Navigation Tabs */}
             <nav className="flex flex-wrap gap-1">
               {NAV_ITEMS.map(n => (
@@ -431,19 +440,61 @@ export default function AdminPage() {
             </div>
           </div>
 
+          {/* Mobile Action Bar (only shows contextual add buttons) */}
+          <div className="flex md:hidden items-center justify-between py-3">
+            {tab === 'products' && (
+              <button onClick={openNewProduct} className="rounded-lg bg-brand-black px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ Add Product</button>
+            )}
+            {tab === 'categories' && (
+              <button onClick={openNewCategory} className="rounded-lg bg-brand-black px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ Category</button>
+            )}
+            {tab === 'blog' && (
+              <button onClick={() => setShowBlogModal(true)} className="rounded-lg bg-brand-black px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ Post</button>
+            )}
+            {tab === 'coupons' && (
+              <button onClick={() => setShowCouponModal(true)} className="rounded-lg bg-brand-black px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ Coupon</button>
+            )}
+          </div>
+
           {/* Dashboard Content Area */}
-          <div className="p-5 md:p-6 lg:p-8">
+          <div className="md:p-6 lg:p-8">
 
         {/* ─── OVERVIEW ─── */}
         {tab === 'overview' && (
           <div>
             {loading ? <Skeleton count={4} /> : stats ? (
-              <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                <StatCard label="Total Revenue" value={fmt(stats.totalRevenue)} icon="💰" />
-                <StatCard label="Total Orders" value={stats.totalOrders} icon="📦" />
-                <StatCard label="Products" value={stats.totalProducts} icon="🌸" />
-                <StatCard label="Customers" value={stats.totalUsers} icon="👥" />
-              </div>
+              <>
+                {/* Desktop stats */}
+                <div className="hidden md:grid mt-6 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                  <StatCard label="Total Revenue" value={fmt(stats.totalRevenue)} icon="💰" />
+                  <StatCard label="Total Orders" value={stats.totalOrders} icon="📦" />
+                  <StatCard label="Products" value={stats.totalProducts} icon="🌸" />
+                  <StatCard label="Customers" value={stats.totalUsers} icon="👥" />
+                </div>
+                {/* Mobile stats - 2x2 grid with colored borders */}
+                <div className="md:hidden grid grid-cols-2 gap-3 mt-2">
+                  <div className="rounded-xl bg-white border-l-4 border-amber-400 p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+                    <span className="text-base">💰</span>
+                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">Revenue</p>
+                    <p className="text-sm font-bold text-brand-black mt-0.5">{fmt(stats.totalRevenue)}</p>
+                  </div>
+                  <div className="rounded-xl bg-white border-l-4 border-blue-400 p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+                    <span className="text-base">📦</span>
+                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">Orders</p>
+                    <p className="text-sm font-bold text-brand-black mt-0.5">{stats.totalOrders}</p>
+                  </div>
+                  <div className="rounded-xl bg-white border-l-4 border-pink-300 p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+                    <span className="text-base">🌸</span>
+                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">Products</p>
+                    <p className="text-sm font-bold text-brand-black mt-0.5">{stats.totalProducts}</p>
+                  </div>
+                  <div className="rounded-xl bg-white border-l-4 border-emerald-400 p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+                    <span className="text-base">👥</span>
+                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">Customers</p>
+                    <p className="text-sm font-bold text-brand-black mt-0.5">{stats.totalUsers}</p>
+                  </div>
+                </div>
+              </>
             ) : <p className="mt-6 text-red-500">Failed to load stats.</p>}
           </div>
         )}
@@ -860,6 +911,43 @@ export default function AdminPage() {
       </div>
     </div>
 
+      {/* ─── Mobile "More" Slide-up Drawer ─── */}
+      {moreDrawerOpen && (
+        <div className="fixed inset-0 z-[60] md:hidden">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setMoreDrawerOpen(false)} />
+          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl animate-slide-up">
+            <div className="flex items-center justify-between px-5 pt-4 pb-2">
+              <h3 className="text-sm font-semibold text-brand-black">More Options</h3>
+              <button onClick={() => setMoreDrawerOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
+                <FiX size={18} className="text-gray-500" />
+              </button>
+            </div>
+            <div className="grid grid-cols-4 gap-2 px-4 pb-6 pt-2">
+              {[
+                { id: 'categories', label: 'Categories', icon: FiGrid },
+                { id: 'users', label: 'Users', icon: FiUsers },
+                { id: 'blog', label: 'Blog', icon: FiEdit3 },
+                { id: 'coupons', label: 'Coupons', icon: FiTag },
+                { id: 'upload', label: 'Upload', icon: FiCamera },
+              ].map(item => {
+                const Icon = item.icon;
+                const isActive = tab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => { setTab(item.id); setMoreDrawerOpen(false); }}
+                    className={`flex flex-col items-center gap-1.5 rounded-xl py-3 px-2 transition ${isActive ? 'bg-[#D1AFA1]/10 text-[#D1AFA1]' : 'text-gray-500 hover:bg-gray-50'}`}
+                  >
+                    <Icon size={20} />
+                    <span className="text-[10px] font-medium">{item.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ─── Mobile Bottom Navigation ─── */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden items-stretch justify-around border-t border-gray-200 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
         {[
@@ -874,8 +962,8 @@ export default function AdminPage() {
           return (
             <button
               key={item.id}
-              onClick={() => setTab(item.id === 'more' ? (tab === 'categories' || tab === 'blog' || tab === 'coupons' || tab === 'upload' ? tab : 'categories') : item.id)}
-              className={`flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] py-2 px-1 flex-1 transition-colors ${isActive ? 'text-[#D1AFA1]' : 'text-gray-400'}`}
+              onClick={() => { if (item.id === 'more') { setMoreDrawerOpen(true); } else { setTab(item.id); setMoreDrawerOpen(false); } }}
+              className={`flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[56px] py-2 px-1 flex-1 transition-colors ${isActive ? 'text-[#D1AFA1]' : 'text-gray-400'}`}
             >
               <Icon size={20} className={isActive ? 'text-[#D1AFA1]' : 'text-gray-400'} />
               <span className={`text-[10px] leading-tight ${isActive ? 'font-semibold text-[#D1AFA1]' : 'text-gray-400'}`}>{item.label}</span>
