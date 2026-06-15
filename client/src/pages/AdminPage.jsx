@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axiosConfig';
 import { getProductImage, getCategoryImage } from '../utils/imageUtils';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-toastify';
-import { FiLogOut } from 'react-icons/fi';
+import { FiLogOut, FiMenu, FiX, FiHome } from 'react-icons/fi';
 import { Badge, Modal, StatCard, Skeleton } from '../components/ui';
 
 const fmt = (v) => new Intl.NumberFormat('en-AE', { style: 'currency', currency: 'AED', minimumFractionDigits: 0 }).format(v || 0);
@@ -33,7 +33,7 @@ const NAV_ITEMS = [
 
 export default function AdminPage() {
   const [tab, setTab] = useState('overview');
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [products, setProducts] = useState([]);
@@ -43,6 +43,7 @@ export default function AdminPage() {
   const [blogs, setBlogs] = useState([]);
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Search states
   const [productSearch, setProductSearch] = useState('');
@@ -384,26 +385,66 @@ export default function AdminPage() {
   });
 
   return (
-    <div className="flex flex-col md:flex-row min-h-[80vh]">
+    <div className="flex min-h-screen bg-[#f9f5f3]">
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-40 bg-black/30 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-full md:w-56 shrink-0 border-b md:border-b-0 md:border-r border-rose-100 bg-gray-50 p-3 md:p-4 overflow-x-auto md:overflow-x-visible">
-        <h2 className="hidden md:block mb-4 md:mb-6 text-lg font-semibold tracking-wide text-brand-black">Admin Panel</h2>
-        <nav className="flex md:flex-col gap-1 md:space-y-1">
+      <aside className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-white border-r border-rose-100 shadow-lg transition-transform duration-300 md:relative md:translate-x-0 md:shadow-none ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {/* Sidebar Header */}
+        <div className="flex items-center justify-between px-5 py-5 border-b border-rose-100">
+          <div>
+            <h2 className="text-base font-semibold tracking-wide text-brand-black">Rose & Ivy</h2>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mt-0.5">Admin Panel</p>
+          </div>
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden p-1 rounded-lg hover:bg-gray-100">
+            <FiX size={20} className="text-gray-500" />
+          </button>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
           {NAV_ITEMS.map(n => (
-            <button key={n.id} onClick={() => setTab(n.id)} className={`flex items-center gap-2 md:gap-3 whitespace-nowrap rounded-xl px-3 py-2 md:py-2.5 text-left text-xs md:text-sm transition ${tab === n.id ? 'bg-rose-100 font-semibold text-brand-black' : 'text-gray-600 hover:bg-rose-50'} md:w-full`}>
-              <span>{n.icon}</span><span>{n.label}</span>
+            <button key={n.id} onClick={() => { setTab(n.id); setSidebarOpen(false); }} className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm transition ${tab === n.id ? 'bg-rose-100 font-semibold text-brand-black shadow-sm' : 'text-gray-600 hover:bg-rose-50 hover:text-brand-black'}`}>
+              <span className="text-base">{n.icon}</span><span>{n.label}</span>
             </button>
           ))}
         </nav>
+
+        {/* Sidebar Footer - User info */}
+        <div className="border-t border-rose-100 px-4 py-4 space-y-3">
+          {/* Back to Store */}
+          <Link to="/" className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-gray-600 hover:bg-rose-50 hover:text-brand-black transition">
+            <FiHome size={16} /><span>Back to Store</span>
+          </Link>
+          {/* User Info */}
+          <div className="flex items-center gap-3 px-4 py-2">
+            <div className="h-8 w-8 rounded-full bg-brand-rose/20 flex items-center justify-center text-xs font-semibold text-brand-black">
+              {user?.name?.charAt(0)?.toUpperCase() || 'A'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-brand-black truncate">{user?.name || 'Admin'}</p>
+              <p className="text-[10px] text-gray-400 truncate">{user?.email || ''}</p>
+            </div>
+          </div>
+        </div>
       </aside>
 
       {/* Main content */}
       <main className="flex-1 flex flex-col min-w-0">
-        {/* Admin Header Bar */}
-        <header className="sticky top-0 z-10 flex h-[60px] items-center justify-between border-b border-gray-200 bg-white px-4 md:px-6 lg:px-8 shrink-0">
-          <h1 className="text-lg md:text-xl font-semibold tracking-wide text-brand-black">
-            {{ overview: 'Dashboard Overview', products: 'Products', orders: 'Orders', categories: 'Categories', users: 'Customers', blog: 'Blog Posts', coupons: 'Coupons', upload: 'Upload Images' }[tab] || 'Admin'}
-          </h1>
+        {/* Top Header Bar */}
+        <header className="sticky top-0 z-30 flex h-[60px] items-center justify-between border-b border-gray-200 bg-white/95 backdrop-blur-sm px-4 md:px-6 lg:px-8 shrink-0">
+          <div className="flex items-center gap-3">
+            {/* Mobile menu toggle */}
+            <button onClick={() => setSidebarOpen(true)} className="md:hidden p-2 rounded-lg hover:bg-gray-100">
+              <FiMenu size={20} className="text-gray-700" />
+            </button>
+            <h1 className="text-lg md:text-xl font-semibold tracking-wide text-brand-black">
+              {{ overview: 'Dashboard Overview', products: 'Products', orders: 'Orders', categories: 'Categories', users: 'Customers', blog: 'Blog Posts', coupons: 'Coupons', upload: 'Upload Images' }[tab] || 'Admin'}
+            </h1>
+          </div>
           <div className="flex items-center gap-3">
             {tab === 'products' && (
               <button onClick={openNewProduct} className="rounded-full bg-brand-black px-4 py-2 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New Product</button>
@@ -419,9 +460,9 @@ export default function AdminPage() {
             )}
             <button
               onClick={() => { logout(); navigate('/'); }}
-              className="flex items-center gap-2 rounded-md border border-red-500 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-500 hover:text-white shadow-sm transition"
+              className="flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-md hover:bg-red-600 transition z-10"
             >
-              <FiLogOut className="text-base" /><span>Logout</span>
+              <FiLogOut size={14} /><span>Logout</span>
             </button>
           </div>
         </header>
