@@ -87,7 +87,7 @@ export default function AdminPage() {
   const [moreDrawerOpen, setMoreDrawerOpen] = useState(false);
 
   useEffect(() => {
-    if (tab === 'overview') fetchStats();
+    if (tab === 'overview') { fetchStats(); fetchOrders(); fetchProducts(); fetchUsers(); }
     if (tab === 'products') fetchProducts();
     if (tab === 'orders') fetchOrders();
     if (tab === 'categories') fetchCategories();
@@ -493,6 +493,100 @@ export default function AdminPage() {
                     <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">Customers</p>
                     <p className="text-sm font-bold text-brand-black mt-0.5">{stats.totalUsers}</p>
                   </div>
+                </div>
+
+                {/* Mobile Quick Actions */}
+                <div className="md:hidden mt-5">
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    <button onClick={() => { setTab('products'); openNewProduct(); }} className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-[#D1AFA1]/10 border border-[#D1AFA1]/30 px-3.5 py-2 text-[11px] font-medium text-[#D1AFA1]">
+                      <span>🌸</span> Add Product
+                    </button>
+                    <button onClick={() => setTab('orders')} className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-blue-50 border border-blue-100 px-3.5 py-2 text-[11px] font-medium text-blue-600">
+                      <span>📦</span> View Orders
+                    </button>
+                    <button onClick={() => setTab('coupons')} className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-amber-50 border border-amber-100 px-3.5 py-2 text-[11px] font-medium text-amber-700">
+                      <span>🎟️</span> Manage Coupons
+                    </button>
+                  </div>
+                </div>
+
+                {/* Mobile Recent Orders */}
+                <div className="md:hidden mt-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-brand-black">Recent Orders</h3>
+                    <button onClick={() => setTab('orders')} className="text-[10px] font-medium text-[#D1AFA1]">View All →</button>
+                  </div>
+                  {orders.length > 0 ? (
+                    <div className="space-y-2">
+                      {orders.slice(0, 5).map(o => (
+                        <div key={o._id} className="flex items-center justify-between rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold text-brand-black">#{o._id?.slice(-6).toUpperCase()}</p>
+                            <p className="text-[10px] text-gray-400 mt-0.5 truncate">{o.user?.name || o.userId?.name || 'Customer'}</p>
+                          </div>
+                          <div className="text-right ml-3">
+                            <p className="text-xs font-bold text-brand-black">{fmt(o.total || o.totalPrice)}</p>
+                            <span className={`inline-block mt-0.5 rounded-full px-2 py-0.5 text-[9px] font-medium ${o.status === 'delivered' ? 'bg-green-100 text-green-700' : o.status === 'cancelled' ? 'bg-red-100 text-red-600' : o.status === 'shipped' ? 'bg-indigo-100 text-indigo-700' : 'bg-yellow-100 text-yellow-700'}`}>{o.status}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-400 text-center py-4">No orders yet</p>
+                  )}
+                </div>
+
+                {/* Mobile Top Products */}
+                <div className="md:hidden mt-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-brand-black">Top Products</h3>
+                    <button onClick={() => setTab('products')} className="text-[10px] font-medium text-[#D1AFA1]">View All →</button>
+                  </div>
+                  {products.length > 0 ? (
+                    <div className="space-y-2">
+                      {products.slice(0, 3).map((p, i) => (
+                        <div key={p._id} className="flex items-center gap-3 rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                          <img src={getProductImage(p)} alt="" className="h-10 w-10 rounded-lg object-cover" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium text-brand-black truncate">{p.name}</p>
+                            <p className="text-[10px] text-gray-400">{p.category?.name || '—'}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs font-bold text-brand-black">{fmt(p.price)}</p>
+                            <p className="text-[9px] text-gray-400">Stock: {p.stock}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-400 text-center py-4">No products yet</p>
+                  )}
+                </div>
+
+                {/* Mobile Recent Customers */}
+                <div className="md:hidden mt-6 mb-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-brand-black">Recent Customers</h3>
+                    <button onClick={() => setTab('users')} className="text-[10px] font-medium text-[#D1AFA1]">View All →</button>
+                  </div>
+                  {users.length > 0 ? (
+                    <div className="space-y-2">
+                      {users.slice(0, 3).map(u => (
+                        <div key={u._id} className="flex items-center gap-3 rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
+                          <div className="h-8 w-8 rounded-full bg-[#D1AFA1]/20 flex items-center justify-center text-xs font-semibold text-brand-black shrink-0">
+                            {u.name?.charAt(0)?.toUpperCase() || '?'}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium text-brand-black truncate">{u.name}</p>
+                            <p className="text-[10px] text-gray-400">{u.email}</p>
+                          </div>
+                          <p className="text-[9px] text-gray-400 shrink-0">{new Date(u.createdAt).toLocaleDateString()}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-400 text-center py-4">No customers yet</p>
+                  )}
                 </div>
               </>
             ) : <p className="mt-6 text-red-500">Failed to load stats.</p>}
