@@ -7,6 +7,7 @@ import { useCurrency } from '../contexts/CurrencyContext';
 import api from '../api/axiosConfig';
 import { getProductImage } from '../utils/imageUtils';
 import { toast } from 'react-toastify';
+import { EmptyState } from '../components/ui';
 
 export default function WishlistPage() {
   const { addToCart } = useCart();
@@ -83,12 +84,13 @@ export default function WishlistPage() {
             <span className="font-inter text-[10px] tracking-[0.25em] uppercase text-[#D1AFA1]">Account</span>
             <h1 className="font-raleway font-light text-2xl md:text-4xl text-[#1a1a1a] tracking-wide mt-2">My Wishlist</h1>
           </div>
-          <div className="bg-white p-10 md:p-20 text-center">
-            <Heart size={48} className="text-[#D1AFA1] mx-auto mb-5" />
-            <h2 className="font-raleway font-light text-xl md:text-2xl text-[#1a1a1a] mb-3">Your wishlist is empty</h2>
-            <p className="font-inter text-[13px] text-[#888] mb-8">Save your favourite arrangements to your wishlist by clicking the heart icon on any product.</p>
-            <Link to="/products" className="inline-block px-8 py-3 bg-[#1a1a1a] text-white font-inter text-[11px] tracking-[0.15em] uppercase no-underline">Explore Collections</Link>
-          </div>
+          <EmptyState
+            icon={Heart}
+            title="Your wishlist is empty"
+            description="Save your favourite arrangements to your wishlist by clicking the heart icon on any product."
+            actionLabel="Explore Collections"
+            actionTo="/products"
+          />
         </div>
       </div>
     );

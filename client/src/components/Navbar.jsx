@@ -61,6 +61,16 @@ export default function Navbar() {
     setSearchOpen(false);
   }, [location]);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
   // Live search debounce
   useEffect(() => {
     if (!searchQuery.trim() || searchQuery.length < 2) {
@@ -117,7 +127,7 @@ export default function Navbar() {
               </span>
               <button
                 onClick={() => { setSearchOpen(true); setTimeout(() => searchRef.current?.focus(), 100); }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: navIconColor, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, letterSpacing: '0.1em', fontFamily: 'Inter', padding: 0 }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: navIconColor, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, letterSpacing: '0.1em', fontFamily: 'Inter', padding: '10px 0', minHeight: 44, minWidth: 44 }}
               >
                 <Search size={16} />
                 <span className="hidden md:inline" style={{ color: navIconColor }}>Search</span>
@@ -261,7 +271,8 @@ export default function Navbar() {
             position: 'fixed', top: 102, left: 0, right: 0, bottom: 0,
             background: '#f9f5f3', zIndex: 999,
             overflowY: 'auto', paddingBottom: 100,
-            animation: 'fadeIn 0.2s ease'
+            animation: 'slideInDown 0.25s ease',
+            WebkitOverflowScrolling: 'touch',
           }}>
             <div className="px-4 py-6">
               {NAV_LINKS.map(link => (

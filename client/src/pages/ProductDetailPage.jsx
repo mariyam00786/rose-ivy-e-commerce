@@ -235,7 +235,7 @@ export default function ProductDetailPage() {
                     activeImageIdx === idx ? 'border-brand-black opacity-100' : 'border-rose-100 opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt={`thumbnail ${idx}`} className="w-full h-full object-cover" />
+                  <img src={img} alt={`thumbnail ${idx}`} loading="lazy" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

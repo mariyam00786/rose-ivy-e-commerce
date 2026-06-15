@@ -13,6 +13,7 @@ export default {
         'brand-border': '#e8e0db',
         'brand-light': '#f9f5f3',
         'brand-red': '#e74c3c',
+        'brand-rose': '#D1AFA1',
       },
       fontFamily: {
         sans: ['Inter', 'Raleway', 'sans-serif'],

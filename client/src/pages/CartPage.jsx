@@ -4,6 +4,7 @@ import { useCart } from '../contexts/CartContext';
 import { useCurrency } from '../contexts/CurrencyContext';
 import { Trash2, ShoppingBag, ArrowRight, Tag, X } from 'lucide-react';
 import { getFallbackImage, getProductImage } from '../utils/imageUtils';
+import { EmptyState } from '../components/ui';
 
 export default function CartPage() {
   const {
@@ -33,20 +34,14 @@ export default function CartPage() {
 
   if (!cartItems.length) {
     return (
-      <div className="mx-auto max-w-2xl px-6 py-32 text-center font-sans">
-        <div className="w-16 h-16 bg-rose-50 text-brand-rose rounded-full flex items-center justify-center mx-auto mb-6">
-          <ShoppingBag className="w-8 h-8" />
-        </div>
-        <h1 className="font-serif text-3xl text-brand-black">Your cart is empty</h1>
-        <p className="text-sm text-brand-gray font-light mt-2 max-w-sm mx-auto">
-          Add some everlasting bio-preserved rose arrangements to your cart.
-        </p>
-        <Link
-          to="/products"
-          className="mt-8 inline-block bg-brand-black hover:bg-brand-rose text-white text-xs uppercase tracking-widest py-3 px-8 font-medium transition duration-300 shadow"
-        >
-          Explore Collection
-        </Link>
+      <div className="mx-auto max-w-2xl px-6 py-32">
+        <EmptyState
+          icon={ShoppingBag}
+          title="Your cart is empty"
+          description="Add some everlasting bio-preserved rose arrangements to your cart."
+          actionLabel="Explore Collection"
+          actionTo="/products"
+        />
       </div>
     );
   }
@@ -79,6 +74,7 @@ export default function CartPage() {
                     <img
                       src={getProductImage(p)}
                       alt={p.name}
+                      loading="lazy"
                       className="w-20 h-24 object-cover bg-rose-50 rounded"
                     />
                     <div>

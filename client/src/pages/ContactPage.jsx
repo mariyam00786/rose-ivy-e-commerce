@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import api from '../api/axiosConfig';
 import { toast } from 'react-toastify';
+import { PageHeader } from '../components/ui';
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
@@ -29,10 +30,7 @@ export default function ContactPage() {
   return (
     <div style={{ background: '#fff' }}>
       {/* Hero */}
-      <section style={{ background: '#1a1a1a', padding: '100px 0 60px', textAlign: 'center' }}>
-        <span style={{ fontFamily: 'Inter', fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#D1AFA1', display: 'block', marginBottom: 16 }}>Get In Touch</span>
-        <h1 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 52, color: '#fff', letterSpacing: '0.04em' }}>Contact Us</h1>
-      </section>
+      <PageHeader subtitle="Get In Touch" title="Contact Us" theme="dark" />
 
       <section style={{ padding: '80px 0' }}>
         <div className="container-site">

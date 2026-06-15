@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { PageHeader } from '../components/ui';
 
 const FAQS = [
   { cat: 'Preserved Flowers', items: [
@@ -50,10 +51,7 @@ function FAQItem({ q, a }) {
 export default function FAQPage() {
   return (
     <div style={{ background: '#fff' }}>
-      <section style={{ background: '#1a1a1a', padding: '100px 0 60px', textAlign: 'center' }}>
-        <span style={{ fontFamily: 'Inter', fontSize: 10, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#D1AFA1', display: 'block', marginBottom: 16 }}>Help Centre</span>
-        <h1 style={{ fontFamily: 'Raleway', fontWeight: 300, fontSize: 52, color: '#fff', letterSpacing: '0.04em' }}>Frequently Asked Questions</h1>
-      </section>
+      <PageHeader subtitle="Help Centre" title="Frequently Asked Questions" theme="dark" />
 
       <section style={{ padding: '80px 0' }}>
         <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 20px' }}>

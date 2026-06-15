@@ -14,6 +14,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 import WhatsAppButton from './components/WhatsAppButton';
 import CookieConsent from './components/CookieConsent';
+import WelcomePopup from './components/WelcomePopup';
+import ExitIntentPopup from './components/ExitIntentPopup';
 
 // Direct (eager) imports — no lazy, no dynamic import errors
 import HomePage from './pages/HomePage';
@@ -65,12 +67,22 @@ function AppLayout() {
   const location = useLocation();
   const isHeroPage = location.pathname === '/';
   const isAdminLogin = location.pathname === '/admin/login';
+  const isAdmin = location.pathname === '/admin';
 
   // Admin login page renders without Navbar/Footer
   if (isAdminLogin) {
     return (
       <Routes>
         <Route path="/admin/login" element={<AdminLoginPage />} />
+      </Routes>
+    );
+  }
+
+  // Admin dashboard renders without Navbar/Footer
+  if (isAdmin) {
+    return (
+      <Routes>
+        <Route path="/admin" element={<AdminRoute><AdminPage /></AdminRoute>} />
       </Routes>
     );
   }
@@ -109,6 +121,8 @@ function AppLayout() {
       <MobileBottomNav />
       <WhatsAppButton />
       <CookieConsent />
+      <WelcomePopup />
+      <ExitIntentPopup />
     </div>
   );
 }

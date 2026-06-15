@@ -82,13 +82,29 @@ app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/giftcards', require('./routes/giftCardRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
-// Serve Bespoke reference file uploads statically
+// Serve Bespoke reference file uploads statically with caching
 const uploadsPath = process.env.VERCEL ? '/tmp/uploads' : path.join(__dirname, 'uploads');
-app.use('/uploads', express.static(uploadsPath));
+app.use('/uploads', express.static(uploadsPath, {
+  maxAge: '7d',
+  etag: true,
+}));
 
 // Production bundle serving
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
+  // Cache static assets (JS, CSS, images) for 1 year with content hashes
+  app.use(express.static(path.join(__dirname, '../client/dist'), {
+    maxAge: '1y',
+    etag: true,
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-cache');
+      } else if (filePath.match(/\.(js|css)$/)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      } else if (filePath.match(/\.(jpg|jpeg|png|gif|webp|svg|ico)$/)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+    },
+  }));
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
   });

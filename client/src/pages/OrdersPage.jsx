@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Package, ChevronRight, Clock } from 'lucide-react';
 import api from '../api/axiosConfig';
 import { useCurrency } from '../contexts/CurrencyContext';
+import { EmptyState } from '../components/ui';
 
 const STATUS_COLORS = {
   pending: { bg: '#fff8e1', color: '#f39c12' },
@@ -35,12 +36,13 @@ export default function OrdersPage() {
             {[...Array(4)].map((_, i) => <div key={i} className="h-24 bg-white rounded" />)}
           </div>
         ) : orders.length === 0 ? (
-          <div className="bg-white p-10 md:p-20 text-center">
-            <Package size={48} className="text-[#D1AFA1] mx-auto mb-5" />
-            <h2 className="font-raleway font-light text-xl md:text-2xl text-[#1a1a1a] mb-3">No orders yet</h2>
-            <p className="font-inter text-[13px] text-[#888] mb-8">When you place your first order, it will appear here.</p>
-            <Link to="/products" className="inline-block px-8 py-3 bg-[#1a1a1a] text-white font-inter text-[11px] tracking-[0.15em] uppercase no-underline">Start Shopping</Link>
-          </div>
+          <EmptyState
+            icon={Package}
+            title="No orders yet"
+            description="When you place your first order, it will appear here."
+            actionLabel="Start Shopping"
+            actionTo="/products"
+          />
         ) : (
           <div className="flex flex-col gap-3">
             {orders.map((order, i) => {

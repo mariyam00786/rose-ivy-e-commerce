@@ -121,12 +121,14 @@ export default function ProductCard({ product, index = 0 }) {
             <img
               src={getProductImage(product)}
               alt={product.name}
+              loading="lazy"
               className="w-full h-full object-cover primary-image transition duration-700"
             />
             {product.images?.length > 1 && (
               <img
                 src={product.images[1]}
                 alt={`${product.name} secondary`}
+                loading="lazy"
                 className="w-full h-full object-cover secondary-image transition duration-700"
               />
             )}
@@ -231,6 +233,32 @@ export default function ProductCard({ product, index = 0 }) {
               </div>
             )}
           </div>
+
+          {/* Add to Cart Button - Always Visible */}
+          {!outOfStock && (
+            <button
+              onClick={(e) => handleAddToCart(e, 1, false)}
+              className={`mt-3 w-full py-2.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all duration-300 flex items-center justify-center gap-2 ${
+                isAdded
+                  ? 'bg-green-500 text-white'
+                  : 'bg-brand-black text-white hover:bg-brand-rose'
+              }`}
+            >
+              {isAdded ? (
+                <><Check className="w-3.5 h-3.5" /> Added</>
+              ) : (
+                <><ShoppingBag className="w-3.5 h-3.5" /> Add to Cart</>
+              )}
+            </button>
+          )}
+          {outOfStock && (
+            <button
+              disabled
+              className="mt-3 w-full py-2.5 rounded-full text-xs font-medium uppercase tracking-wider bg-gray-200 text-gray-500 cursor-not-allowed"
+            >
+              Out of Stock
+            </button>
+          )}
         </div>
       </motion.div>
 

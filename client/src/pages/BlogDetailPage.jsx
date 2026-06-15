@@ -32,7 +32,7 @@ export default function BlogDetailPage() {
         <p style={{ fontFamily: 'Inter', fontSize: 12, color: '#bbb', letterSpacing: '0.08em', marginBottom: 40 }}>{post.date}</p>
 
         <div style={{ overflow: 'hidden', aspectRatio: '16/7', marginBottom: 52 }}>
-          <img src={post.img} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src={post.img} alt={post.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
 
         {post.content.split('\n\n').map((para, i) => (

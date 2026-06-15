@@ -41,7 +41,7 @@ export default function AboutPage() {
             </motion.div>
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
               <div style={{ aspectRatio: '4/5', overflow: 'hidden' }}>
-                <img src="https://inbloom.ae/wp-content/uploads/61611C01-32D3-4F9A-8574-A42D3862F129.jpg" alt="Flower Box" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <img src="https://inbloom.ae/wp-content/uploads/61611C01-32D3-4F9A-8574-A42D3862F129.jpg" alt="Flower Box" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             </motion.div>
           </div>

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { PageHeader } from '../components/ui';
 
 const POSTS = [
   { slug: 'art-of-preserved-roses', category: 'Preservation', title: 'The Art of Preserved Roses', excerpt: 'Discover the meticulous process behind bio-preserving roses to retain their natural beauty for years without water or maintenance.', date: 'May 12, 2026', img: 'https://inbloom.ae/wp-content/uploads/61611C01-32D3-4F9A-8574-A42D3862F129.jpg' },
@@ -13,17 +14,14 @@ export default function BlogPage() {
   const [featured, ...rest] = POSTS;
   return (
     <div style={{ background: '#fff' }}>
-      <section className="bg-[#1a1a1a] pt-20 pb-12 md:pt-24 md:pb-16 text-center px-4">
-        <span className="font-inter text-[10px] tracking-[0.3em] uppercase text-[#D1AFA1] block mb-4">Stories & Inspiration</span>
-        <h1 className="font-raleway font-light text-3xl md:text-5xl text-white tracking-wide">The Journal</h1>
-      </section>
+      <PageHeader subtitle="Stories & Inspiration" title="The Journal" theme="dark" />
 
       <section className="py-12 md:py-20">
         <div className="container-site px-4 md:px-6">
           {POSTS.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-1 md:grid-cols-2 gap-0 mb-12 bg-[#f9f5f3]">
             <div style={{ position: 'relative', aspectRatio: '4/3' }}>
-              <img src={featured.img} alt={featured.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <img src={featured.img} alt={featured.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
             <div className="p-6 md:p-12 flex flex-col justify-center">
               <span className="font-inter text-[10px] tracking-[0.2em] uppercase text-[#D1AFA1] mb-3 md:mb-4 block">{featured.category}</span>
@@ -43,7 +41,7 @@ export default function BlogPage() {
               <motion.div key={post.slug} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <Link to={`/blog/${post.slug}`} style={{ display: 'block', textDecoration: 'none' }}>
                   <div style={{ overflow: 'hidden', aspectRatio: '3/2', marginBottom: 20 }}>
-                    <img src={post.img} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
+                    <img src={post.img} alt={post.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }}
                       onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
                       onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                     />

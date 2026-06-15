@@ -14,7 +14,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [viewMode, setViewMode] = useState(() => localStorage.getItem('products-view-mode') || 'grid');
 
   // Filter States
   const [selectedCategory, setSelectedCategory] = useState(categorySlug || searchParams.get('category') || '');
@@ -26,6 +26,7 @@ export default function ProductsPage() {
   const [page, setPage] = useState(Number(searchParams.get('page') || 1));
   const [totalPages, setTotalPages] = useState(1);
   const [totalProducts, setTotalProducts] = useState(0);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const { formatPrice } = useCurrency();
 
@@ -135,10 +136,19 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 grid grid-cols-1 lg:grid-cols-4 gap-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-4 gap-10">
         
+        {/* Mobile Filter Toggle */}
+        <button
+          onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
+          className="lg:hidden flex items-center gap-2 text-xs uppercase tracking-widest font-medium text-brand-black border border-rose-200 py-3 px-4 w-full justify-center"
+        >
+          <SlidersHorizontal className="w-4 h-4 text-brand-rose" />
+          {mobileFiltersOpen ? 'Hide Filters' : 'Show Filters'}
+        </button>
+
         {/* Left Sidebar: Filters */}
-        <aside className="lg:col-span-1 space-y-8">
+        <aside className={`lg:col-span-1 space-y-8 ${mobileFiltersOpen ? 'block' : 'hidden lg:block'}`}>
           <div className="flex items-center justify-between border-b border-rose-100 pb-3">
             <h3 className="font-sans text-xs uppercase tracking-widest font-medium text-brand-black flex items-center gap-2">
               <SlidersHorizontal className="w-4.5 h-4.5 text-brand-rose" /> Filter Collections
@@ -273,14 +283,14 @@ export default function ProductsPage() {
               {/* Grid/List layout switcher */}
               <div className="flex border border-rose-200 rounded overflow-hidden">
                 <button
-                  onClick={() => setViewMode('grid')}
+                  onClick={() => { setViewMode('grid'); localStorage.setItem('products-view-mode', 'grid'); }}
                   className={`p-2 transition ${viewMode === 'grid' ? 'bg-brand-rose text-white' : 'hover:bg-rose-50 text-brand-gray'}`}
                   aria-label="Grid View"
                 >
                   <Grid className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => setViewMode('list')}
+                  onClick={() => { setViewMode('list'); localStorage.setItem('products-view-mode', 'list'); }}
                   className={`p-2 transition ${viewMode === 'list' ? 'bg-brand-rose text-white' : 'hover:bg-rose-50 text-brand-gray'}`}
                   aria-label="List View"
                 >
@@ -331,11 +341,12 @@ export default function ProductsPage() {
                   return (
                     <div
                       key={product._id}
-                      className="border border-rose-100 p-4 flex flex-col sm:flex-row gap-6 items-center bg-white hover:bg-rose-50/10 hover-lift overflow-hidden"
+                      className="border border-rose-100 p-4 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center bg-white hover:bg-rose-50/10 hover-lift overflow-hidden"
                     >
                       <img
                         src={getProductImage(product)}
                         alt={product.name}
+                        loading="lazy"
                         className="w-full sm:w-40 aspect-[4/5] object-cover bg-rose-50 rounded"
                       />
                       <div className="flex-1 space-y-2 text-center sm:text-left">
