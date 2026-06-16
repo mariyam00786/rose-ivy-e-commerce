@@ -5,7 +5,7 @@ import { getProductImage, getCategoryImage } from '../utils/imageUtils';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-toastify';
-import { FiLogOut } from 'react-icons/fi';
+import { FiLogOut, FiHome, FiPackage, FiShoppingBag, FiUsers, FiMoreHorizontal } from 'react-icons/fi';
 import { Badge, Modal, StatCard, Skeleton } from '../components/ui';
 
 const fmt = (v) => new Intl.NumberFormat('en-AE', { style: 'currency', currency: 'AED', minimumFractionDigits: 0 }).format(v || 0);
@@ -383,10 +383,20 @@ export default function AdminPage() {
     return matchesSearch && matchesFilter;
   });
 
+  const MOBILE_NAV = [
+    { id: 'overview', label: 'Home', icon: FiHome },
+    { id: 'products', label: 'Products', icon: FiPackage },
+    { id: 'orders', label: 'Orders', icon: FiShoppingBag },
+    { id: 'users', label: 'Customers', icon: FiUsers },
+    { id: 'more', label: 'More', icon: FiMoreHorizontal },
+  ];
+
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+
   return (
-    <div className="flex flex-col md:flex-row min-h-[80vh]">
+    <div className="flex flex-col md:flex-row min-h-[80vh] pb-[72px] md:pb-0">
       {/* Sidebar */}
-      <aside className="w-full md:w-56 shrink-0 border-b md:border-b-0 md:border-r border-rose-100 bg-gray-50 p-3 md:p-4 overflow-x-auto md:overflow-x-visible">
+      <aside className="w-full md:w-56 shrink-0 border-b md:border-b-0 md:border-r border-rose-100 bg-gray-50 p-3 md:p-4 overflow-x-auto md:overflow-x-visible hidden md:block">
         <h2 className="hidden md:block mb-4 md:mb-6 text-lg font-semibold tracking-wide text-brand-black">Admin Panel</h2>
         <nav className="flex md:flex-col gap-1 md:space-y-1">
           {NAV_ITEMS.map(n => (
@@ -1131,6 +1141,56 @@ export default function AdminPage() {
         onCancel={() => setConfirmDialog(d => ({ ...d, open: false }))}
         variant="danger"
       />
+
+      {/* ─── Mobile Bottom Navigation ─── */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
+        <div className="flex items-center justify-around h-[68px] px-1">
+          {MOBILE_NAV.map(item => {
+            const Icon = item.icon;
+            const isActive = item.id === 'more' ? showMoreMenu : tab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  if (item.id === 'more') {
+                    setShowMoreMenu(!showMoreMenu);
+                  } else {
+                    setTab(item.id);
+                    setShowMoreMenu(false);
+                  }
+                }}
+                className={`flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 rounded-lg transition-colors ${
+                  isActive ? 'text-rose-600' : 'text-gray-400'
+                }`}
+              >
+                <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
+                <span className={`text-[10px] mt-1 leading-none ${isActive ? 'font-semibold' : 'font-normal'}`}>{item.label}</span>
+                {isActive && <div className="w-4 h-0.5 bg-rose-500 rounded-full mt-1" />}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* More menu popup */}
+        {showMoreMenu && (
+          <div className="absolute bottom-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg rounded-t-2xl p-4 animate-in slide-in-from-bottom">
+            <div className="grid grid-cols-4 gap-3">
+              {NAV_ITEMS.filter(n => !['overview', 'products', 'orders', 'users'].includes(n.id)).map(n => (
+                <button
+                  key={n.id}
+                  onClick={() => { setTab(n.id); setShowMoreMenu(false); }}
+                  className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition ${
+                    tab === n.id ? 'bg-rose-100 text-rose-700' : 'text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <span className="text-xl">{n.icon}</span>
+                  <span className="text-[10px] font-medium">{n.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </nav>
     </div>
   );
 }
