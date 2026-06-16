@@ -28,7 +28,6 @@ const NAV_ITEMS = [
   { id: 'users', label: 'Users', icon: '👥' },
   { id: 'blog', label: 'Blog', icon: '📝' },
   { id: 'coupons', label: 'Coupons', icon: '🎟️' },
-  { id: 'upload', label: 'Upload', icon: '📷' },
 ];
 
 export default function AdminPage() {
@@ -412,7 +411,7 @@ export default function AdminPage() {
         {/* Admin Header Bar */}
         <header className="sticky top-0 z-10 flex h-[60px] items-center justify-between border-b border-gray-200 bg-white px-4 md:px-6 lg:px-8 shrink-0">
           <h1 className="text-lg md:text-xl font-semibold tracking-wide text-brand-black">
-            {{ overview: 'Dashboard Overview', products: 'Products', orders: 'Orders', categories: 'Categories', users: 'Customers', blog: 'Blog Posts', coupons: 'Coupons', upload: 'Upload Images' }[tab] || 'Admin'}
+            {{ overview: 'Dashboard Overview', products: 'Products', orders: 'Orders', categories: 'Categories', users: 'Customers', blog: 'Blog Posts', coupons: 'Coupons' }[tab] || 'Admin'}
           </h1>
           <div className="flex items-center gap-3">
             {tab === 'products' && (
@@ -984,33 +983,7 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* ─── UPLOAD ─── */}
-        {tab === 'upload' && (
-          <div>
-            <p className="mt-1 text-sm text-gray-500">JPG, PNG, WEBP · Max 5 files, 5 MB each.</p>
-            <form onSubmit={handleUpload} className="mt-6 space-y-4">
-              <div className="rounded-2xl border-2 border-dashed border-rose-200 bg-rose-50/50 p-6 text-center">
-                <input type="file" accept="image/png,image/jpeg,image/webp" multiple onChange={e => setFiles(Array.from(e.target.files || []))} className="block w-full text-sm" />
-                {files.length > 0 && <p className="mt-2 text-xs text-gray-500">{files.length} file(s) selected</p>}
-              </div>
-              <button type="submit" disabled={uploading} className="rounded-full bg-brand-black px-6 py-3 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose disabled:opacity-60">{uploading ? 'Uploading…' : 'Upload'}</button>
-            </form>
-            {uploadMsg && <p className="mt-4 rounded-xl bg-rose-50 px-4 py-3 text-sm">{uploadMsg}</p>}
-            {uploadedUrls.length > 0 && (
-              <div className="mt-6 grid gap-4 md:grid-cols-2">
-                {uploadedUrls.map(url => (
-                  <div key={url} className="overflow-hidden rounded-2xl border border-rose-100">
-                    <img src={url} alt="" className="h-40 w-full object-cover" />
-                    <div className="flex items-center justify-between px-3 py-2">
-                      <p className="break-all text-xs text-gray-600 flex-1">{url}</p>
-                      <button onClick={() => { navigator.clipboard.writeText(url); toast.success('URL copied!'); }} className="ml-2 text-xs text-blue-600 hover:underline shrink-0">Copy</button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+
         </div>
       </main>
 
