@@ -9,11 +9,93 @@ const { sendShippingNotificationEmail } = require('../utils/emailService');
 // @access  Private/Admin
 exports.getStats = async (req, res, next) => {
   try {
-    const orders = await Order.find();
-    const users = await User.countDocuments();
-    const products = await Product.countDocuments();
+    const orders = await Order.find().populate('user', 'name email').populate('userId', 'name email').sort({ createdAt: -1 });
+    const users = await User.find().select('-password').sort({ createdAt: -1 });
+    const products = await Product.find().populate('category', 'name').sort({ createdAt: -1 });
+
     const totalRevenue = orders.reduce((sum, order) => sum + (order.total || order.totalPrice || 0), 0);
-    res.json({ totalOrders: orders.length, totalRevenue, totalUsers: users, totalProducts: products });
+
+    // Order status breakdown
+    const ordersByStatus = orders.reduce((acc, o) => {
+      const s = o.status || 'unknown';
+      acc[s] = (acc[s] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Revenue by month (last 6 months)
+    const monthlyRevenue = [];
+    const now = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const start = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const end = new Date(now.getFullYear(), now.getMonth() - i + 1, 0, 23, 59, 59);
+      const monthOrders = orders.filter(o => {
+        const d = new Date(o.createdAt);
+        return d >= start && d <= end;
+      });
+      monthlyRevenue.push({
+        month: start.toLocaleString('default', { month: 'short', year: 'numeric' }),
+        revenue: monthOrders.reduce((s, o) => s + (o.total || o.totalPrice || 0), 0),
+        orders: monthOrders.length,
+      });
+    }
+
+    // Top selling products (from order items)
+    const productSales = {};
+    orders.forEach(o => {
+      const items = o.items || o.orderItems || [];
+      items.forEach(item => {
+        const id = (item.product || item.productId || '').toString();
+        const name = item.name || 'Unknown';
+        if (!productSales[id]) productSales[id] = { name, quantity: 0, revenue: 0 };
+        productSales[id].quantity += item.quantity || item.qty || 1;
+        productSales[id].revenue += (item.price || 0) * (item.quantity || item.qty || 1);
+      });
+    });
+    const topProducts = Object.values(productSales).sort((a, b) => b.revenue - a.revenue).slice(0, 5);
+
+    // Recent orders (last 5)
+    const recentOrders = orders.slice(0, 5).map(o => ({
+      _id: o._id,
+      customer: o.user?.name || o.userId?.name || 'Guest',
+      email: o.user?.email || o.userId?.email || '',
+      total: o.total || o.totalPrice || 0,
+      status: o.status,
+      paymentStatus: o.paymentStatus,
+      paymentMethod: o.paymentMethod,
+      createdAt: o.createdAt,
+      itemCount: (o.items || o.orderItems || []).length,
+    }));
+
+    // Recent customers (last 5)
+    const recentCustomers = users.slice(0, 5).map(u => ({
+      _id: u._id,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      createdAt: u.createdAt,
+    }));
+
+    // Low stock products
+    const lowStock = products.filter(p => p.stock <= 5).slice(0, 5).map(p => ({
+      _id: p._id,
+      name: p.name,
+      stock: p.stock,
+      price: p.price,
+      category: p.category?.name || '',
+    }));
+
+    res.json({
+      totalOrders: orders.length,
+      totalRevenue,
+      totalUsers: users.length,
+      totalProducts: products.length,
+      ordersByStatus,
+      monthlyRevenue,
+      topProducts,
+      recentOrders,
+      recentCustomers,
+      lowStock,
+    });
   } catch (err) {
     next(err);
   }

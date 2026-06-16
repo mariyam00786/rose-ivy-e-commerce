@@ -5,7 +5,7 @@ import { getProductImage, getCategoryImage } from '../utils/imageUtils';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useAuth } from '../contexts/AuthContext';
 import { toast } from 'react-toastify';
-import { FiLogOut, FiHome, FiPackage, FiShoppingBag, FiUsers, FiMoreHorizontal, FiX, FiGrid, FiEdit3, FiTag, FiCamera } from 'react-icons/fi';
+import { FiLogOut } from 'react-icons/fi';
 import { Badge, Modal, StatCard, Skeleton } from '../components/ui';
 
 const fmt = (v) => new Intl.NumberFormat('en-AE', { style: 'currency', currency: 'AED', minimumFractionDigits: 0 }).format(v || 0);
@@ -33,7 +33,7 @@ const NAV_ITEMS = [
 
 export default function AdminPage() {
   const [tab, setTab] = useState('overview');
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [products, setProducts] = useState([]);
@@ -84,10 +84,9 @@ export default function AdminPage() {
 
   // Confirm dialog state
   const [confirmDialog, setConfirmDialog] = useState({ open: false, title: '', message: '', onConfirm: null });
-  const [moreDrawerOpen, setMoreDrawerOpen] = useState(false);
 
   useEffect(() => {
-    if (tab === 'overview') { fetchStats(); fetchOrders(); fetchProducts(); fetchUsers(); }
+    if (tab === 'overview') fetchStats();
     if (tab === 'products') fetchProducts();
     if (tab === 'orders') fetchOrders();
     if (tab === 'categories') fetchCategories();
@@ -385,208 +384,209 @@ export default function AdminPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#f9f5f3]">
-      {/* Fixed Top Navbar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 flex h-14 md:h-16 items-center justify-between border-b border-gray-200 bg-white px-4 md:px-8 shadow-sm">
-        {/* Left - Logo */}
-        <h1 className="text-sm md:text-lg font-semibold tracking-widest text-brand-black uppercase">Rose Ivy</h1>
-        {/* Center - Dashboard */}
-        <span className="absolute left-1/2 -translate-x-1/2 text-[10px] md:text-sm font-medium tracking-wide text-gray-500 md:text-gray-700 uppercase">Dashboard</span>
-        {/* Right - Logout */}
-        {/* Desktop: full button */}
-        <button
-          onClick={() => { logout(); navigate('/'); }}
-          className="hidden md:flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow hover:bg-red-600 transition"
-        >
-          <FiLogOut size={14} /><span>Logout</span>
-        </button>
-        {/* Mobile: icon-only */}
-        <button
-          onClick={() => { logout(); navigate('/'); }}
-          className="md:hidden flex items-center justify-center w-8 h-8 rounded-full bg-red-500 text-white shadow-sm hover:bg-red-600 transition"
-        >
-          <FiLogOut size={14} />
-        </button>
-      </nav>
+    <div className="flex flex-col md:flex-row min-h-[80vh]">
+      {/* Sidebar */}
+      <aside className="w-full md:w-56 shrink-0 border-b md:border-b-0 md:border-r border-rose-100 bg-gray-50 p-3 md:p-4 overflow-x-auto md:overflow-x-visible">
+        <h2 className="hidden md:block mb-4 md:mb-6 text-lg font-semibold tracking-wide text-brand-black">Admin Panel</h2>
+        <nav className="flex md:flex-col gap-1 md:space-y-1">
+          {NAV_ITEMS.map(n => (
+            <button key={n.id} onClick={() => setTab(n.id)} className={`flex items-center gap-2 md:gap-3 whitespace-nowrap rounded-xl px-3 py-2 md:py-2.5 text-left text-xs md:text-sm transition ${tab === n.id ? 'bg-rose-100 font-semibold text-brand-black' : 'text-gray-600 hover:bg-rose-50'} md:w-full`}>
+              <span>{n.icon}</span><span>{n.label}</span>
+            </button>
+          ))}
+        </nav>
+      </aside>
 
-      {/* Main Content Below Navbar */}
-      <div className="pt-16 md:pt-20 px-4 md:px-8 pb-24 md:pb-8">
-        {/* Bordered Container - desktop only has border */}
-        <div className="md:rounded-2xl md:border md:border-gray-200 md:bg-white md:min-h-[calc(100vh-7rem)] md:shadow-sm">
-          {/* Top Bar inside container - Nav tabs + Add button (DESKTOP ONLY) */}
-          <div className="hidden md:flex md:flex-row md:items-center justify-between gap-3 border-b border-gray-100 px-5 py-4">
-            {/* Navigation Tabs */}
-            <nav className="flex flex-wrap gap-1">
-              {NAV_ITEMS.map(n => (
-                <button key={n.id} onClick={() => setTab(n.id)} className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${tab === n.id ? 'bg-brand-black text-white shadow-sm' : 'text-gray-500 hover:bg-gray-100 hover:text-brand-black'}`}>
-                  <span>{n.icon}</span><span>{n.label}</span>
-                </button>
-              ))}
-            </nav>
-            {/* Action Buttons */}
-            <div className="flex items-center gap-2 shrink-0">
-              {tab === 'products' && (
-                <button onClick={openNewProduct} className="rounded-lg bg-brand-black px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ Add New Product</button>
-              )}
-              {tab === 'categories' && (
-                <button onClick={openNewCategory} className="rounded-lg bg-brand-black px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ New Category</button>
-              )}
-              {tab === 'blog' && (
-                <button onClick={() => setShowBlogModal(true)} className="rounded-lg bg-brand-black px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ New Post</button>
-              )}
-              {tab === 'coupons' && (
-                <button onClick={() => setShowCouponModal(true)} className="rounded-lg bg-brand-black px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ New Coupon</button>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile Action Bar (only shows contextual add buttons) */}
-          <div className="flex md:hidden items-center justify-between py-3">
+      {/* Main content */}
+      <main className="flex-1 flex flex-col min-w-0">
+        {/* Admin Header Bar */}
+        <header className="sticky top-0 z-10 flex h-[60px] items-center justify-between border-b border-gray-200 bg-white px-4 md:px-6 lg:px-8 shrink-0">
+          <h1 className="text-lg md:text-xl font-semibold tracking-wide text-brand-black">
+            {{ overview: 'Dashboard Overview', products: 'Products', orders: 'Orders', categories: 'Categories', users: 'Customers', blog: 'Blog Posts', coupons: 'Coupons', upload: 'Upload Images' }[tab] || 'Admin'}
+          </h1>
+          <div className="flex items-center gap-3">
             {tab === 'products' && (
-              <button onClick={openNewProduct} className="rounded-lg bg-brand-black px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ Add Product</button>
+              <button onClick={openNewProduct} className="rounded-full bg-brand-black px-4 py-2 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New Product</button>
             )}
             {tab === 'categories' && (
-              <button onClick={openNewCategory} className="rounded-lg bg-brand-black px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ Category</button>
+              <button onClick={openNewCategory} className="rounded-full bg-brand-black px-4 py-2 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New Category</button>
             )}
             {tab === 'blog' && (
-              <button onClick={() => setShowBlogModal(true)} className="rounded-lg bg-brand-black px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ Post</button>
+              <button onClick={() => setShowBlogModal(true)} className="rounded-full bg-brand-black px-4 py-2 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New Post</button>
             )}
             {tab === 'coupons' && (
-              <button onClick={() => setShowCouponModal(true)} className="rounded-lg bg-brand-black px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-white hover:bg-brand-rose transition shadow-sm">+ Coupon</button>
+              <button onClick={() => setShowCouponModal(true)} className="rounded-full bg-brand-black px-4 py-2 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New Coupon</button>
             )}
+            <button
+              onClick={() => { logout(); navigate('/'); }}
+              className="flex items-center gap-2 rounded-md border border-red-500 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-500 hover:text-white shadow-sm transition"
+            >
+              <FiLogOut className="text-base" /><span>Logout</span>
+            </button>
           </div>
+        </header>
 
-          {/* Dashboard Content Area */}
-          <div className="md:p-6 lg:p-8">
+        <div className="flex-1 p-4 md:p-6 lg:p-8">
 
         {/* ─── OVERVIEW ─── */}
         {tab === 'overview' && (
           <div>
             {loading ? <Skeleton count={4} /> : stats ? (
               <>
-                {/* Desktop stats */}
-                <div className="hidden md:grid mt-6 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                {/* KPI Cards */}
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                   <StatCard label="Total Revenue" value={fmt(stats.totalRevenue)} icon="💰" />
                   <StatCard label="Total Orders" value={stats.totalOrders} icon="📦" />
                   <StatCard label="Products" value={stats.totalProducts} icon="🌸" />
                   <StatCard label="Customers" value={stats.totalUsers} icon="👥" />
                 </div>
-                {/* Mobile stats - 2x2 grid with colored borders */}
-                <div className="md:hidden grid grid-cols-2 gap-3 mt-2">
-                  <div className="rounded-xl bg-white border-l-4 border-amber-400 p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-                    <span className="text-base">💰</span>
-                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">Revenue</p>
-                    <p className="text-sm font-bold text-brand-black mt-0.5">{fmt(stats.totalRevenue)}</p>
+
+                {/* Monthly Revenue Chart + Order Status */}
+                <div className="mt-8 grid gap-6 lg:grid-cols-3">
+                  {/* Revenue Bar Chart */}
+                  <div className="lg:col-span-2 rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+                    <h3 className="text-sm font-semibold text-brand-black mb-4">Monthly Revenue (Last 6 Months)</h3>
+                    {stats.monthlyRevenue && stats.monthlyRevenue.length > 0 ? (
+                      <div className="flex items-end gap-3 h-44">
+                        {stats.monthlyRevenue.map((m, i) => {
+                          const maxRev = Math.max(...stats.monthlyRevenue.map(x => x.revenue), 1);
+                          const height = Math.max((m.revenue / maxRev) * 100, 4);
+                          return (
+                            <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                              <span className="text-[10px] text-gray-500 font-medium">{fmt(m.revenue)}</span>
+                              <div className="w-full rounded-t-lg bg-gradient-to-t from-rose-400 to-rose-200 transition-all" style={{ height: `${height}%`, minHeight: '4px' }} />
+                              <span className="text-[10px] text-gray-500 mt-1">{m.month}</span>
+                              <span className="text-[9px] text-gray-400">{m.orders} orders</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : <p className="text-sm text-gray-400">No revenue data yet.</p>}
                   </div>
-                  <div className="rounded-xl bg-white border-l-4 border-blue-400 p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-                    <span className="text-base">📦</span>
-                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">Orders</p>
-                    <p className="text-sm font-bold text-brand-black mt-0.5">{stats.totalOrders}</p>
-                  </div>
-                  <div className="rounded-xl bg-white border-l-4 border-pink-300 p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-                    <span className="text-base">🌸</span>
-                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">Products</p>
-                    <p className="text-sm font-bold text-brand-black mt-0.5">{stats.totalProducts}</p>
-                  </div>
-                  <div className="rounded-xl bg-white border-l-4 border-emerald-400 p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
-                    <span className="text-base">👥</span>
-                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wide">Customers</p>
-                    <p className="text-sm font-bold text-brand-black mt-0.5">{stats.totalUsers}</p>
+
+                  {/* Order Status Breakdown */}
+                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+                    <h3 className="text-sm font-semibold text-brand-black mb-4">Order Status</h3>
+                    {stats.ordersByStatus && Object.keys(stats.ordersByStatus).length > 0 ? (
+                      <div className="space-y-3">
+                        {Object.entries(stats.ordersByStatus).map(([status, count]) => {
+                          const total = stats.totalOrders || 1;
+                          const pct = Math.round((count / total) * 100);
+                          const colorMap = { pending: 'bg-yellow-400', processing: 'bg-blue-400', shipped: 'bg-indigo-400', delivered: 'bg-green-400', cancelled: 'bg-red-400' };
+                          return (
+                            <div key={status}>
+                              <div className="flex justify-between text-xs mb-1">
+                                <span className="capitalize text-gray-700">{status}</span>
+                                <span className="text-gray-500">{count} ({pct}%)</span>
+                              </div>
+                              <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+                                <div className={`h-full rounded-full ${colorMap[status] || 'bg-gray-400'}`} style={{ width: `${pct}%` }} />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    ) : <p className="text-sm text-gray-400">No orders yet.</p>}
                   </div>
                 </div>
 
-                {/* Mobile Quick Actions */}
-                <div className="md:hidden mt-5">
-                  <div className="flex gap-2 overflow-x-auto pb-1">
-                    <button onClick={() => { setTab('products'); openNewProduct(); }} className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-[#D1AFA1]/10 border border-[#D1AFA1]/30 px-3.5 py-2 text-[11px] font-medium text-[#D1AFA1]">
-                      <span>🌸</span> Add Product
-                    </button>
-                    <button onClick={() => setTab('orders')} className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-blue-50 border border-blue-100 px-3.5 py-2 text-[11px] font-medium text-blue-600">
-                      <span>📦</span> View Orders
-                    </button>
-                    <button onClick={() => setTab('coupons')} className="flex items-center gap-1.5 whitespace-nowrap rounded-full bg-amber-50 border border-amber-100 px-3.5 py-2 text-[11px] font-medium text-amber-700">
-                      <span>🎟️</span> Manage Coupons
-                    </button>
+                {/* Top Products + Recent Orders */}
+                <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                  {/* Top Selling Products */}
+                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+                    <h3 className="text-sm font-semibold text-brand-black mb-4">🏆 Top Selling Products</h3>
+                    {stats.topProducts && stats.topProducts.length > 0 ? (
+                      <div className="space-y-3">
+                        {stats.topProducts.map((p, i) => (
+                          <div key={i} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                            <div className="flex items-center gap-3">
+                              <span className="w-6 h-6 rounded-full bg-rose-100 text-rose-700 text-xs font-bold flex items-center justify-center">{i + 1}</span>
+                              <div>
+                                <p className="text-sm font-medium text-gray-800 truncate max-w-[180px]">{p.name}</p>
+                                <p className="text-[11px] text-gray-400">{p.quantity} sold</p>
+                              </div>
+                            </div>
+                            <span className="text-sm font-semibold text-brand-black">{fmt(p.revenue)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : <p className="text-sm text-gray-400">No sales data yet.</p>}
                   </div>
-                </div>
 
-                {/* Mobile Recent Orders */}
-                <div className="md:hidden mt-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xs font-semibold uppercase tracking-wide text-brand-black">Recent Orders</h3>
-                    <button onClick={() => setTab('orders')} className="text-[10px] font-medium text-[#D1AFA1]">View All →</button>
-                  </div>
-                  {orders.length > 0 ? (
-                    <div className="space-y-2">
-                      {orders.slice(0, 5).map(o => (
-                        <div key={o._id} className="flex items-center justify-between rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold text-brand-black">#{o._id?.slice(-6).toUpperCase()}</p>
-                            <p className="text-[10px] text-gray-400 mt-0.5 truncate">{o.user?.name || o.userId?.name || 'Customer'}</p>
-                          </div>
-                          <div className="text-right ml-3">
-                            <p className="text-xs font-bold text-brand-black">{fmt(o.total || o.totalPrice)}</p>
-                            <span className={`inline-block mt-0.5 rounded-full px-2 py-0.5 text-[9px] font-medium ${o.status === 'delivered' ? 'bg-green-100 text-green-700' : o.status === 'cancelled' ? 'bg-red-100 text-red-600' : o.status === 'shipped' ? 'bg-indigo-100 text-indigo-700' : 'bg-yellow-100 text-yellow-700'}`}>{o.status}</span>
-                          </div>
-                        </div>
-                      ))}
+                  {/* Recent Orders */}
+                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-semibold text-brand-black">📦 Recent Orders</h3>
+                      <button onClick={() => setTab('orders')} className="text-xs text-rose-600 hover:underline">View All →</button>
                     </div>
-                  ) : (
-                    <p className="text-xs text-gray-400 text-center py-4">No orders yet</p>
-                  )}
+                    {stats.recentOrders && stats.recentOrders.length > 0 ? (
+                      <div className="space-y-3">
+                        {stats.recentOrders.map(o => (
+                          <div key={o._id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                            <div>
+                              <p className="text-sm font-medium text-gray-800">{o.customer}</p>
+                              <p className="text-[11px] text-gray-400">{new Date(o.createdAt).toLocaleDateString()} · {o.itemCount} item(s)</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-sm font-semibold">{fmt(o.total)}</p>
+                              <span className={`inline-block mt-0.5 rounded-full px-2 py-0.5 text-[10px] font-medium capitalize ${STATUS_COLORS[o.status] || 'bg-gray-100 text-gray-600'}`}>{o.status}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : <p className="text-sm text-gray-400">No orders yet.</p>}
+                  </div>
                 </div>
 
-                {/* Mobile Top Products */}
-                <div className="md:hidden mt-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xs font-semibold uppercase tracking-wide text-brand-black">Top Products</h3>
-                    <button onClick={() => setTab('products')} className="text-[10px] font-medium text-[#D1AFA1]">View All →</button>
+                {/* Low Stock + Recent Customers */}
+                <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                  {/* Low Stock Alert */}
+                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+                    <h3 className="text-sm font-semibold text-brand-black mb-4">⚠️ Low Stock Alert</h3>
+                    {stats.lowStock && stats.lowStock.length > 0 ? (
+                      <div className="space-y-3">
+                        {stats.lowStock.map(p => (
+                          <div key={p._id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                            <div>
+                              <p className="text-sm font-medium text-gray-800">{p.name}</p>
+                              <p className="text-[11px] text-gray-400">{p.category || 'Uncategorized'}</p>
+                            </div>
+                            <div className="text-right">
+                              <span className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold ${p.stock <= 0 ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'}`}>
+                                {p.stock <= 0 ? 'Out of Stock' : `${p.stock} left`}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : <p className="text-sm text-green-600">✓ All products well stocked!</p>}
                   </div>
-                  {products.length > 0 ? (
-                    <div className="space-y-2">
-                      {products.slice(0, 3).map((p, i) => (
-                        <div key={p._id} className="flex items-center gap-3 rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-                          <img src={getProductImage(p)} alt="" className="h-10 w-10 rounded-lg object-cover" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-brand-black truncate">{p.name}</p>
-                            <p className="text-[10px] text-gray-400">{p.category?.name || '—'}</p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-xs font-bold text-brand-black">{fmt(p.price)}</p>
-                            <p className="text-[9px] text-gray-400">Stock: {p.stock}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-xs text-gray-400 text-center py-4">No products yet</p>
-                  )}
-                </div>
 
-                {/* Mobile Recent Customers */}
-                <div className="md:hidden mt-6 mb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-xs font-semibold uppercase tracking-wide text-brand-black">Recent Customers</h3>
-                    <button onClick={() => setTab('users')} className="text-[10px] font-medium text-[#D1AFA1]">View All →</button>
-                  </div>
-                  {users.length > 0 ? (
-                    <div className="space-y-2">
-                      {users.slice(0, 3).map(u => (
-                        <div key={u._id} className="flex items-center gap-3 rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.06)]">
-                          <div className="h-8 w-8 rounded-full bg-[#D1AFA1]/20 flex items-center justify-center text-xs font-semibold text-brand-black shrink-0">
-                            {u.name?.charAt(0)?.toUpperCase() || '?'}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-brand-black truncate">{u.name}</p>
-                            <p className="text-[10px] text-gray-400">{u.email}</p>
-                          </div>
-                          <p className="text-[9px] text-gray-400 shrink-0">{new Date(u.createdAt).toLocaleDateString()}</p>
-                        </div>
-                      ))}
+                  {/* Recent Customers */}
+                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-semibold text-brand-black">👥 Recent Customers</h3>
+                      <button onClick={() => setTab('users')} className="text-xs text-rose-600 hover:underline">View All →</button>
                     </div>
-                  ) : (
-                    <p className="text-xs text-gray-400 text-center py-4">No customers yet</p>
-                  )}
+                    {stats.recentCustomers && stats.recentCustomers.length > 0 ? (
+                      <div className="space-y-3">
+                        {stats.recentCustomers.map(u => (
+                          <div key={u._id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-sm font-bold text-rose-700">
+                                {(u.name || '?')[0].toUpperCase()}
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-800">{u.name}</p>
+                                <p className="text-[11px] text-gray-400">{u.email}</p>
+                              </div>
+                            </div>
+                            <span className="text-[10px] text-gray-400">{new Date(u.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : <p className="text-sm text-gray-400">No customers yet.</p>}
+                  </div>
                 </div>
               </>
             ) : <p className="mt-6 text-red-500">Failed to load stats.</p>}
@@ -1002,70 +1002,7 @@ export default function AdminPage() {
           </div>
         )}
         </div>
-      </div>
-    </div>
-
-      {/* ─── Mobile "More" Slide-up Drawer ─── */}
-      {moreDrawerOpen && (
-        <div className="fixed inset-0 z-[60] md:hidden">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setMoreDrawerOpen(false)} />
-          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-xl animate-slide-up">
-            <div className="flex items-center justify-between px-5 pt-4 pb-2">
-              <h3 className="text-sm font-semibold text-brand-black">More Options</h3>
-              <button onClick={() => setMoreDrawerOpen(false)} className="p-2 rounded-full hover:bg-gray-100">
-                <FiX size={18} className="text-gray-500" />
-              </button>
-            </div>
-            <div className="grid grid-cols-4 gap-2 px-4 pb-6 pt-2">
-              {[
-                { id: 'categories', label: 'Categories', icon: FiGrid },
-                { id: 'users', label: 'Users', icon: FiUsers },
-                { id: 'blog', label: 'Blog', icon: FiEdit3 },
-                { id: 'coupons', label: 'Coupons', icon: FiTag },
-                { id: 'upload', label: 'Upload', icon: FiCamera },
-              ].map(item => {
-                const Icon = item.icon;
-                const isActive = tab === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => { setTab(item.id); setMoreDrawerOpen(false); }}
-                    className={`flex flex-col items-center gap-1.5 rounded-xl py-3 px-2 transition ${isActive ? 'bg-[#D1AFA1]/10 text-[#D1AFA1]' : 'text-gray-500 hover:bg-gray-50'}`}
-                  >
-                    <Icon size={20} />
-                    <span className="text-[10px] font-medium">{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ─── Mobile Bottom Navigation ─── */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden items-stretch justify-around border-t border-gray-200 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
-        {[
-          { id: 'overview', label: 'Home', icon: FiHome },
-          { id: 'products', label: 'Products', icon: FiPackage },
-          { id: 'orders', label: 'Orders', icon: FiShoppingBag },
-          { id: 'users', label: 'Customers', icon: FiUsers },
-          { id: 'more', label: 'More', icon: FiMoreHorizontal },
-        ].map(item => {
-          const Icon = item.icon;
-          const isActive = item.id === 'more' ? ['categories', 'blog', 'coupons', 'upload'].includes(tab) : tab === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => { if (item.id === 'more') { setMoreDrawerOpen(true); } else { setTab(item.id); setMoreDrawerOpen(false); } }}
-              className={`flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[56px] py-2 px-1 flex-1 transition-colors ${isActive ? 'text-[#D1AFA1]' : 'text-gray-400'}`}
-            >
-              <Icon size={20} className={isActive ? 'text-[#D1AFA1]' : 'text-gray-400'} />
-              <span className={`text-[10px] leading-tight ${isActive ? 'font-semibold text-[#D1AFA1]' : 'text-gray-400'}`}>{item.label}</span>
-              {isActive && <span className="w-5 h-0.5 rounded-full bg-[#D1AFA1] mt-0.5" />}
-            </button>
-          );
-        })}
-      </nav>
+      </main>
 
       {/* ─── Product Modal ─── */}
       <Modal open={showProductModal} onClose={() => setShowProductModal(false)} title={editingProduct ? 'Edit Product' : 'New Product'}>
