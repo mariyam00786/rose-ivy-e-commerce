@@ -409,52 +409,61 @@ export default function AdminPage() {
       {/* Main content */}
       <main className="flex-1 flex flex-col min-w-0">
         {/* Admin Header Bar */}
-        <header className="sticky top-0 z-10 flex h-[60px] items-center justify-between border-b border-gray-200 bg-white px-4 md:px-6 lg:px-8 shrink-0">
-          <h1 className="text-lg md:text-xl font-semibold tracking-wide text-brand-black">
-            {{ overview: 'Dashboard Overview', products: 'Products', orders: 'Orders', categories: 'Categories', users: 'Customers', blog: 'Blog Posts', coupons: 'Coupons' }[tab] || 'Admin'}
+        <header className="sticky top-0 z-10 flex h-[52px] md:h-[60px] items-center justify-between border-b border-gray-200 bg-white px-4 md:px-6 lg:px-8 shrink-0">
+          <h1 className="text-sm md:text-xl font-semibold tracking-wide text-brand-black">
+            <span className="hidden md:inline">{{ overview: 'Dashboard Overview', products: 'Products', orders: 'Orders', categories: 'Categories', users: 'Customers', blog: 'Blog Posts', coupons: 'Coupons' }[tab] || 'Admin'}</span>
+            <span className="md:hidden text-xs font-bold uppercase tracking-[0.12em] text-gray-700">Rose Ivy Dashboard</span>
           </h1>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             {tab === 'products' && (
-              <button onClick={openNewProduct} className="rounded-full bg-brand-black px-4 py-2 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New Product</button>
+              <button onClick={openNewProduct} className="rounded-full bg-brand-black px-3 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New</button>
             )}
             {tab === 'categories' && (
-              <button onClick={openNewCategory} className="rounded-full bg-brand-black px-4 py-2 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New Category</button>
+              <button onClick={openNewCategory} className="rounded-full bg-brand-black px-3 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New</button>
             )}
             {tab === 'blog' && (
-              <button onClick={() => setShowBlogModal(true)} className="rounded-full bg-brand-black px-4 py-2 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New Post</button>
+              <button onClick={() => setShowBlogModal(true)} className="rounded-full bg-brand-black px-3 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New</button>
             )}
             {tab === 'coupons' && (
-              <button onClick={() => setShowCouponModal(true)} className="rounded-full bg-brand-black px-4 py-2 text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New Coupon</button>
+              <button onClick={() => setShowCouponModal(true)} className="rounded-full bg-brand-black px-3 md:px-4 py-1.5 md:py-2 text-[10px] md:text-xs uppercase tracking-[0.15em] text-white hover:bg-brand-rose transition">+ New</button>
             )}
+            {/* Desktop logout */}
             <button
               onClick={() => { logout(); navigate('/'); }}
-              className="flex items-center gap-2 rounded-md border border-red-500 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-500 hover:text-white shadow-sm transition"
+              className="hidden md:flex items-center gap-2 rounded-md border border-red-500 bg-white px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-500 hover:text-white shadow-sm transition"
             >
               <FiLogOut className="text-base" /><span>Logout</span>
+            </button>
+            {/* Mobile logout - icon only */}
+            <button
+              onClick={() => { logout(); navigate('/'); }}
+              className="md:hidden flex items-center justify-center w-8 h-8 rounded-full bg-red-50 border border-red-200 text-red-500 hover:bg-red-500 hover:text-white transition"
+            >
+              <FiLogOut size={14} />
             </button>
           </div>
         </header>
 
-        <div className="flex-1 p-4 md:p-6 lg:p-8">
+        <div className="flex-1 px-4 py-5 md:p-6 lg:p-8 space-y-6 md:space-y-0">
 
         {/* ─── OVERVIEW ─── */}
         {tab === 'overview' && (
           <div>
             {loading ? <Skeleton count={4} /> : stats ? (
               <>
-                {/* KPI Cards */}
-                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                  <StatCard label="Total Revenue" value={fmt(stats.totalRevenue)} icon="💰" />
-                  <StatCard label="Total Orders" value={stats.totalOrders} icon="📦" />
-                  <StatCard label="Products" value={stats.totalProducts} icon="🌸" />
-                  <StatCard label="Customers" value={stats.totalUsers} icon="👥" />
+                {/* KPI Cards - 2x2 on mobile, 4 cols on desktop */}
+                <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">
+                  <StatCard label="Total Revenue" value={fmt(stats.totalRevenue)} icon="💰" color="gold" />
+                  <StatCard label="Total Orders" value={stats.totalOrders} icon="📦" color="blue" />
+                  <StatCard label="Products" value={stats.totalProducts} icon="🌸" color="pink" />
+                  <StatCard label="Customers" value={stats.totalUsers} icon="👥" color="green" />
                 </div>
 
                 {/* Monthly Revenue Chart + Order Status */}
-                <div className="mt-8 grid gap-6 lg:grid-cols-3">
+                <div className="mt-5 md:mt-8 grid gap-4 md:gap-6 lg:grid-cols-3">
                   {/* Revenue Bar Chart */}
-                  <div className="lg:col-span-2 rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
-                    <h3 className="text-sm font-semibold text-brand-black mb-4">Monthly Revenue (Last 6 Months)</h3>
+                  <div className="lg:col-span-2 rounded-2xl border border-rose-100 bg-white p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:shadow-sm">
+                    <h3 className="text-xs md:text-sm font-semibold text-brand-black mb-3 md:mb-4">Monthly Revenue (Last 6 Months)</h3>
                     {stats.monthlyRevenue && stats.monthlyRevenue.length > 0 ? (
                       <div className="flex items-end gap-3 h-44">
                         {stats.monthlyRevenue.map((m, i) => {
@@ -474,8 +483,8 @@ export default function AdminPage() {
                   </div>
 
                   {/* Order Status Breakdown */}
-                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
-                    <h3 className="text-sm font-semibold text-brand-black mb-4">Order Status</h3>
+                  <div className="rounded-2xl border border-rose-100 bg-white p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:shadow-sm">
+                    <h3 className="text-xs md:text-sm font-semibold text-brand-black mb-3 md:mb-4">Order Status</h3>
                     {stats.ordersByStatus && Object.keys(stats.ordersByStatus).length > 0 ? (
                       <div className="space-y-3">
                         {Object.entries(stats.ordersByStatus).map(([status, count]) => {
@@ -500,10 +509,10 @@ export default function AdminPage() {
                 </div>
 
                 {/* Top Products + Recent Orders */}
-                <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                <div className="mt-5 md:mt-8 grid gap-4 md:gap-6 lg:grid-cols-2">
                   {/* Top Selling Products */}
-                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
-                    <h3 className="text-sm font-semibold text-brand-black mb-4">🏆 Top Selling Products</h3>
+                  <div className="rounded-2xl border border-rose-100 bg-white p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:shadow-sm">
+                    <h3 className="text-xs md:text-sm font-semibold text-brand-black mb-3 md:mb-4">🏆 Top Selling Products</h3>
                     {stats.topProducts && stats.topProducts.length > 0 ? (
                       <div className="space-y-3">
                         {stats.topProducts.map((p, i) => (
@@ -523,9 +532,9 @@ export default function AdminPage() {
                   </div>
 
                   {/* Recent Orders */}
-                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-sm font-semibold text-brand-black">📦 Recent Orders</h3>
+                  <div className="rounded-2xl border border-rose-100 bg-white p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:shadow-sm">
+                    <div className="flex items-center justify-between mb-3 md:mb-4">
+                      <h3 className="text-xs md:text-sm font-semibold text-brand-black">📦 Recent Orders</h3>
                       <button onClick={() => setTab('orders')} className="text-xs text-rose-600 hover:underline">View All →</button>
                     </div>
                     {stats.recentOrders && stats.recentOrders.length > 0 ? (
@@ -548,10 +557,10 @@ export default function AdminPage() {
                 </div>
 
                 {/* Low Stock + Recent Customers */}
-                <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                <div className="mt-5 md:mt-8 grid gap-4 md:gap-6 lg:grid-cols-2">
                   {/* Low Stock Alert */}
-                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
-                    <h3 className="text-sm font-semibold text-brand-black mb-4">⚠️ Low Stock Alert</h3>
+                  <div className="rounded-2xl border border-rose-100 bg-white p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:shadow-sm">
+                    <h3 className="text-xs md:text-sm font-semibold text-brand-black mb-3 md:mb-4">⚠️ Low Stock Alert</h3>
                     {stats.lowStock && stats.lowStock.length > 0 ? (
                       <div className="space-y-3">
                         {stats.lowStock.map(p => (
@@ -572,9 +581,9 @@ export default function AdminPage() {
                   </div>
 
                   {/* Recent Customers */}
-                  <div className="rounded-2xl border border-rose-100 bg-white p-5 shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-sm font-semibold text-brand-black">👥 Recent Customers</h3>
+                  <div className="rounded-2xl border border-rose-100 bg-white p-4 md:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.08)] md:shadow-sm">
+                    <div className="flex items-center justify-between mb-3 md:mb-4">
+                      <h3 className="text-xs md:text-sm font-semibold text-brand-black">👥 Recent Customers</h3>
                       <button onClick={() => setTab('users')} className="text-xs text-rose-600 hover:underline">View All →</button>
                     </div>
                     {stats.recentCustomers && stats.recentCustomers.length > 0 ? (
@@ -1116,8 +1125,8 @@ export default function AdminPage() {
       />
 
       {/* ─── Mobile Bottom Navigation ─── */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.06)]">
-        <div className="flex items-center justify-around h-[68px] px-1">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white border-t border-gray-100 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center justify-around h-[64px] px-2">
           {MOBILE_NAV.map(item => {
             const Icon = item.icon;
             const isActive = item.id === 'more' ? showMoreMenu : tab === item.id;
@@ -1132,36 +1141,42 @@ export default function AdminPage() {
                     setShowMoreMenu(false);
                   }
                 }}
-                className={`flex flex-col items-center justify-center min-w-[44px] min-h-[44px] px-2 py-1 rounded-lg transition-colors ${
-                  isActive ? 'text-rose-600' : 'text-gray-400'
+                className={`flex flex-col items-center justify-center min-w-[48px] min-h-[44px] px-2 py-1 rounded-xl transition-all ${
+                  isActive ? 'text-rose-600' : 'text-gray-400 active:scale-95'
                 }`}
               >
                 <Icon size={20} strokeWidth={isActive ? 2.5 : 1.5} />
-                <span className={`text-[10px] mt-1 leading-none ${isActive ? 'font-semibold' : 'font-normal'}`}>{item.label}</span>
-                {isActive && <div className="w-4 h-0.5 bg-rose-500 rounded-full mt-1" />}
+                <span className={`text-[10px] mt-0.5 leading-none ${isActive ? 'font-semibold' : 'font-normal'}`}>{item.label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* More menu popup */}
+        {/* More menu - slide-up drawer */}
         {showMoreMenu && (
-          <div className="absolute bottom-full left-0 right-0 bg-white border-t border-gray-100 shadow-lg rounded-t-2xl p-4 animate-in slide-in-from-bottom">
-            <div className="grid grid-cols-4 gap-3">
-              {NAV_ITEMS.filter(n => !['overview', 'products', 'orders', 'users'].includes(n.id)).map(n => (
-                <button
-                  key={n.id}
-                  onClick={() => { setTab(n.id); setShowMoreMenu(false); }}
-                  className={`flex flex-col items-center gap-1.5 p-3 rounded-xl transition ${
-                    tab === n.id ? 'bg-rose-100 text-rose-700' : 'text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  <span className="text-xl">{n.icon}</span>
-                  <span className="text-[10px] font-medium">{n.label}</span>
-                </button>
-              ))}
+          <>
+            <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-[-1]" onClick={() => setShowMoreMenu(false)} />
+            <div className="absolute bottom-full left-0 right-0 bg-white rounded-t-3xl shadow-[0_-8px_30px_rgba(0,0,0,0.12)] pb-2 animate-in slide-in-from-bottom">
+              <div className="flex justify-center pt-3 pb-2">
+                <div className="w-10 h-1 rounded-full bg-gray-200" />
+              </div>
+              <p className="px-5 pb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">More Options</p>
+              <div className="px-4 pb-3 space-y-1">
+                {NAV_ITEMS.filter(n => !['overview', 'products', 'orders', 'users'].includes(n.id)).map(n => (
+                  <button
+                    key={n.id}
+                    onClick={() => { setTab(n.id); setShowMoreMenu(false); }}
+                    className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl transition ${
+                      tab === n.id ? 'bg-rose-50 text-rose-700' : 'text-gray-700 active:bg-gray-50'
+                    }`}
+                  >
+                    <span className="text-lg">{n.icon}</span>
+                    <span className="text-sm font-medium">{n.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          </>
         )}
       </nav>
     </div>
